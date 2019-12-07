@@ -11,8 +11,7 @@
 \setmainfont{Linux Libertine O}   % задаёт основной шрифт документа
 
 \usepackage{unicode-math}     % пакет для установки математического шрифта
-\setmathfont[math-style=upright]{Neo Euler} % шрифт для математики
-
+%\setmathfont[math-style=upright]{Neo Euler} % шрифт для математики
 
 % Размер страницы 
 \usepackage[paper=a4paper, top=20mm, bottom=15mm,left=20mm,right=15mm]{geometry}
@@ -28,7 +27,7 @@
 % Работа с картинками
 \usepackage{graphicx}                  % Для вставки рисунков
 \usepackage{graphics}
-\graphicspath{{images_task/}}    % можно указать папки с картинками
+\graphicspath{{images/}}    % можно указать папки с картинками
 \usepackage{wrapfig}                   % Обтекание рисунков и таблиц текстом
 \usepackage{float}    
 
@@ -117,6 +116,10 @@
 	\maketitle
 	
 \section*{Задачи к посиделке 1} 
+
+
+ПОПЫТКА КОМИТА из оверлифа
+
 
 \begin{problem}
 Добродум хозяин кофейни на Тверской. Он хочет понять насколько сильно будет заполнена кофейня в следущие выходные. Для этого по старым данным он обучил нейросетку. На вход она принимает три фактора: температуру за окном, $x_1$, пол баристы на смене, $x_2$ и факт наличия на Тверской митинга, $x_3$.  В качестве функции активации Добродум использует $ReLU.$ 
