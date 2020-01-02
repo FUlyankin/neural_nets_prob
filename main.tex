@@ -1,0 +1,783 @@
+%!TEX TS-program = xelatex
+\documentclass[12pt, a4paper, oneside]{article}
+
+% пакеты для математики
+\usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools}  
+\mathtoolsset{showonlyrefs=true}  % Показывать номера только у тех формул, на которые есть \eqref{} в тексте.
+
+\usepackage[english, russian]{babel} % выбор языка для документа
+% \usepackage[utf8]{inputenc}          % utf8 кодировка
+
+% Основные шрифты 
+\usepackage{fontspec}         
+\setmainfont{Linux Libertine O}  % задаёт основной шрифт документа
+
+% Математические шрифты 
+\usepackage{unicode-math}     
+\setmathfont[math-style=upright]{[Neo Euler.otf]} 
+
+%%%%%%%%%% Работа с картинками и таблицами %%%%%%%%%%
+\usepackage{graphicx} % Для вставки рисунков                
+\usepackage{graphics}
+\graphicspath{{images/}{pictures/}}   % папки с картинками
+
+\usepackage{wrapfig}    % обтекание рисунков и таблиц текстом
+
+\usepackage{booktabs}   % таблицы как в годных книгах
+\usepackage{tabularx}   % новые типы колонок
+\usepackage{tabulary}   % и ещё новые типы колонок
+\usepackage{float}      % возможность позиционировать объекты в нужном месте
+\renewcommand{\arraystretch}{1.2}  % больше расстояние между строками
+
+
+%%%%%%%%%% Графики и рисование %%%%%%%%%%
+\usepackage{tikz, pgfplots}  % языки для графики
+\pgfplotsset{compat=1.16}
+
+\usepackage{todonotes} % для вставки в документ заметок о том, что осталось сделать
+% \todo{Здесь надо коэффициенты исправить}
+% \missingfigure{Здесь будет Последний день Помпеи}
+% \listoftodos --- печатает все поставленные \todo'шки
+
+
+%%%%%%%%%% Внешний вид страницы %%%%%%%%%%
+
+\usepackage[paper=a4paper, top=20mm, bottom=15mm,left=20mm,right=15mm]{geometry}
+\usepackage{indentfirst}    % установка отступа в первом абзаце главы
+
+\usepackage{setspace}
+\setstretch{1.15}  % межстрочный интервал
+\setlength{\parskip}{4mm}   % Расстояние между абзацами
+% Разные длины в LaTeX: https://en.wikibooks.org/wiki/LaTeX/Lengths
+
+% свешиваем пунктуацию
+% теперь знаки пунктуации могут вылезать за правую границу текста, при этом текст выглядит ровнее
+\usepackage{microtype}
+
+% \flushbottom                            % Эта команда заставляет LaTeX чуть растягивать строки, чтобы получить идеально прямоугольную страницу
+\righthyphenmin=2                       % Разрешение переноса двух и более символов
+\widowpenalty=300                     % Небольшое наказание за вдовствующую строку (одна строка абзаца на этой странице, остальное --- на следующей)
+\clubpenalty=3000                     % Приличное наказание за сиротствующую строку (омерзительно висящая одинокая строка в начале страницы)
+\tolerance=10000     % Ещё какое-то наказание.
+
+% мои цвета https://www.artlebedev.ru/colors/
+\definecolor{titleblue}{rgb}{0.2,0.4,0.6} 
+\definecolor{blue}{rgb}{0.2,0.4,0.6} 
+\definecolor{red}{rgb}{1,0,0.2} 
+\definecolor{green}{rgb}{0,0.6,0} 
+\definecolor{purp}{rgb}{0.4,0,0.8} 
+
+% цвета из geogebra 
+\definecolor{litebrown}{rgb}{0.6,0.2,0}
+\definecolor{darkbrown}{rgb}{0.75,0.75,0.75}
+
+% Гиперссылки
+\usepackage{xcolor}   % разные цвета
+
+\usepackage{hyperref}
+\hypersetup{
+	unicode=true,           % позволяет использовать юникодные символы
+	colorlinks=true,       	% true - цветные ссылки
+	urlcolor=blue,          % цвет ссылки на url
+	linkcolor=red,          % внутренние ссылки
+	citecolor=green,        % на библиографию
+	breaklinks              % если ссылка не умещается в одну строку, разбивать её на две части?
+}
+
+% меняю оформление секций 
+\usepackage{titlesec}
+\usepackage{sectsty}
+
+% меняю цвет на синий
+\sectionfont{\color{titleblue}}
+\subsectionfont{\color{titleblue}}
+
+% выбрасываю нумерацию страниц и колонтитулы 
+\pagestyle{empty}
+
+% синие круглые бульпоинты в списках itemize 
+\usepackage{enumitem}
+
+\definecolor{itemizeblue}{rgb}{0, 0.45, 0.70}
+
+\newcommand*{\MyPoint}{\tikz \draw [baseline, fill=itemizeblue, draw=blue] circle (2.5pt);}
+
+\renewcommand{\labelitemi}{\MyPoint}
+
+% расстояние в списках
+\setlist[itemize]{parsep=0.4em,itemsep=0em,topsep=0ex}
+\setlist[enumerate]{parsep=0.4em,itemsep=0em,topsep=0ex}
+
+
+%%%%%%%%%% Свои команды %%%%%%%%%%
+
+% Математические операторы первой необходимости:
+\DeclareMathOperator{\sgn}{sign}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator{\E}{\mathop{E}}
+\DeclareMathOperator{\Med}{Med}
+\DeclareMathOperator{\Mod}{Mod}
+\DeclareMathOperator*{\plim}{plim}
+
+% команды пореже
+\newcommand{\const}{\mathrm{const}}  % const прямым начертанием
+\newcommand{\iid}{\sim i.\,i.\,d.}  % ну вы поняли...
+\newcommand{\fr}[2]{\ensuremath{^{#1}/_{#2}}}   % особая дробь
+\newcommand{\ind}[1]{\mathbbm{1}_{\{#1\}}} % Индикатор события
+\newcommand{\dx}[1]{\,\mathrm{d}#1} % для интеграла: маленький отступ и прямая d
+
+% одеваем шапки на частые штуки
+\def \hb{\hat{\beta}}
+\def \hs{\hat{s}}
+\def \hy{\hat{y}}
+\def \hY{\hat{Y}}
+\def \he{\hat{\varepsilon}}
+\def \hVar{\widehat{\Var}}
+\def \hCorr{\widehat{\Corr}}
+\def \hCov{\widehat{\Cov}}
+
+% Греческие буквы
+\def \a{\alpha}
+\def \b{\beta}
+\def \t{\tau}
+\def \dt{\delta}
+\def \e{\varepsilon}
+\def \ga{\gamma}
+\def \kp{\varkappa}
+\def \la{\lambda}
+\def \sg{\sigma}
+\def \tt{\theta}
+\def \Dt{\Delta}
+\def \La{\Lambda}
+\def \Sg{\Sigma}
+\def \Tt{\Theta}
+\def \Om{\Omega}
+\def \om{\omega}
+
+% Готика
+\def \mA{\mathcal{A}}
+\def \mB{\mathcal{B}}
+\def \mC{\mathcal{C}}
+\def \mE{\mathcal{E}}
+\def \mF{\mathcal{F}}
+\def \mH{\mathcal{H}}
+\def \mL{\mathcal{L}}
+\def \mN{\mathcal{N}}
+\def \mU{\mathcal{U}}
+\def \mV{\mathcal{V}}
+\def \mW{\mathcal{W}}
+
+% Жирные буквы
+\def \mbb{\mathbb}
+\def \RR{\mbb R}
+\def \NN{\mbb N}
+\def \ZZ{\mbb Z}
+\def \PP{\mbb{P}}
+\def \QQ{\mbb Q}
+
+
+%%%%%%%%%% Теоремы %%%%%%%%%%
+\theoremstyle{plain} % Это стиль по умолчанию.  Есть другие стили.
+\newtheorem{theorem}{Теорема}[section]
+\newtheorem{result}{Следствие}[theorem]
+% счётчик подчиняется теоремному, нумерация идёт по главам согласованно между собой
+
+% убирает курсив и что-то еще наверное делает ;)
+\theoremstyle{definition}         
+\newtheorem*{definition}{Определение}  % нумерация не идёт вообще
+
+
+%%%%%%%%%% Задачки и решения %%%%%%%%%%
+\usepackage{etoolbox}    % логические операторы для своих макросов
+\usepackage{environ}
+\newtoggle{lecture}
+
+\newcounter{probNum}[section]  % счётчик для упражнений 
+\NewEnviron{problem}[1]{%
+    \refstepcounter{probNum}% увеличели номер на 1 
+    {\noindent \textbf{\large \color{titleblue} Упражнение~\theprobNum~#1}  \\ \\ \BODY}
+    {}%
+  }
+
+% Окружение, чтобы можно было убирать решения из pdf
+\NewEnviron{solution}{%
+  \iftoggle{lecture}
+    {\noindent \textbf{\large Решение:} \\ \\ \BODY}
+    {}%
+  }
+  
+% выделение по тексту важных вещей
+\newcommand{\indef}[1]{\textbf{ \color{green} #1}} 
+
+\title{Тятя! Тятя! Наши сети притащили мертвеца!}
+\date{ }
+\author{Ульянкин Филипп}
+
+\begin{document}
+	
+\maketitle
+	
+\begin{abstract}
+    Если ты не понимаешь как самостоятельно реализовать самую топорную версию модели, а потом ввести в неё несколько простеньких улучшений --- ты не понимаешь эту модель.
+    
+    Ты никогда не сможешь сполна проникнуться ей, понять все её прелести, изучить и сполна использовать все её рычажки. Ты никогда не сможешь немного видоизменить её и применить те же самые принципы для новой задачи. Она никогда не будет с тобой искренней. Ты будешь думать, что она показывает свои самые лучшие метрики, в то время, как на самом деле, она будет улыбаться другому. Тому кто знает, где у неё гиперпараметр $G$.
+    
+    Как понять внутренности и суметь написать код, описывающий их? Как заслужить её любовь и искренность? Надо окунаться в математику, которая за ней стоит. Однако она иногда бывает слишком сложной. Это отбивает всё желание быть с ней полностью на одной волне. 
+    
+    Эта серия виньеток сделана для тех, кто хочет не просто поиграться с прелестями машинного обучения. Она для тех, кто хочет досконально их прочувствовать. Через серию инфантильных задачек мы будем идти от простых вещей к сложным до тех пор, пока не окажемся на пике. 
+    
+    Здесь и сегодня пойдёт речь о нейронных сетках. Мы попробуем понять как работает Backpropagation ручками на бумажке. Шаг за шагом, .... 
+    
+    Послать тут всех хейтеров нахрен и написать что это не дип лернинг от бенджи и ко, а инфантильные задачи на пару вечеров
+    \todo[inline]{Написать по-нормальному abstract!}
+\end{abstract}
+	
+\tableofcontents
+
+\todo[inline]{Все должно быть в концепте маши кому принадлежит лёрнинг}
+	
+\section{Всего лишь функция} 
+
+\begin{problem}{(От регрессии к нейросети)}
+
+\end{problem}
+
+
+\begin{problem}{(Из картинки в формулу)}
+Маша сходила в кофейню на Тверской выпить кофе. 
+
+Добродум хозяин кофейни на Тверской. Он хочет понять насколько сильно будет заполнена кофейня в следущие выходные. Для этого по старым данным он обучил нейросетку. На вход она принимает три фактора: температуру за окном, $x_1$, пол баристы на смене, $x_2$ и факт наличия на Тверской митинга, $x_3$.  В качестве функции активации Добродум использует $ReLU.$ 
+
+\begin{center}
+	\includegraphics[scale=0.2]{task_1.png}
+\end{center}
+
+\begin{enumerate}
+\item В эти выходные за барной стойкой стоит Агнесса. Митинга не предвидится, температура будет в районе $20$ градусов. Сколько человек придёт в кофейню к Добродуму? 
+
+\item На самом деле каждая нейросетка --- это просто-напросто какая-то нелинейная сложная функция. Запишите нейросеть Добродума в виде функции.
+\end{enumerate}
+\end{problem}
+
+
+\begin{problem}{(Из формулы в картинку)}
+Теперь в обратную сторону. Пусть у нас есть вот такая функция. 
+\[
+y = \max(0, 4 \cdot \max(0, 3x_1 + 4x_2 + 1) + 2 \cdot \max(0, 3x_1 + 2x_2 + 7) + 6)
+\]
+
+Нарисуйте эту функцию в виде нейросетки.
+\end{problem}
+
+
+\begin{problem}{(Армия регрессий)}
+Парни очень любят Свету, а Света любит собирать перцептроны и думать по вечерам об их весах и функциях активации. Сегодня она решила разобрать свои залежи из перцептронов и как следует упорядочить их. 
+
+\begin{itemize}
+	\item Для перцептрона 
+
+	\begin{center}
+	\definecolor{cqcqcq}{rgb}{0.7529411764705882,0.7529411764705882,0.7529411764705882}
+	\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+	\clip(-4,1) rectangle (3.306148366367316,4.5);
+	\draw [line width=1.pt] (-3.,4.) circle (0.5cm);
+	\draw [line width=1.pt] (-3.152000366859971,1.7166134938755313) circle (0.5cm);
+	\draw [line width=1.pt] (-1.,3.)-- (-1.,2.);
+	\draw [line width=1.pt] (-1.,2.)-- (1.5,2.);
+	\draw [line width=1.pt] (1.5,2.)-- (1.5,3.);
+	\draw [line width=1.pt] (1.5,3.)-- (-1.,3.);
+	\draw [->,line width=1.pt] (-2.5,4.) -- (-1.0315953503775401,2.702352315488771);
+	\draw [->,line width=1.pt] (-2.652000366859971,1.7166134938755313) -- (-1.,2.5);
+	\draw [->,line width=1.pt] (1.5,2.5) -- (2.5,2.5);
+	\draw (-3.4,2) node[anchor=north west] {$x_1$};
+	\draw (-0.8,2.8) node[anchor=north west] {$\max(0,t)$};
+	\draw (2.6,2.7) node[anchor=north west] {$y$};
+	\draw (-1.8,3.9) node[anchor=north west] {$w_1$};
+	\draw (-2.5,2.6) node[anchor=north west] {$w_2$};
+	\draw (-3.2,4.25) node[anchor=north west] {$1$};
+	\end{tikzpicture}
+	\end{center}
+	
+	нужно подобрать веса так, чтобы он превращал $x_1 = 0$ в $y=1$, а $x_1 = 1$ в $y=0$.
+	
+	\item  Для перцепторона 
+	
+	\begin{center}
+	\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+	\clip(-4,0.5) rectangle (3.3,4.5);
+	\draw [line width=1.pt] (-3.,4.) circle (0.5cm);
+	\draw [line width=1.pt] (-3.,2.5) circle (0.5cm);
+	\draw [line width=1.pt] (-3.,1.) circle (0.5cm);
+	\draw [line width=1.pt] (-1.,3.)-- (-1.,2.);
+	\draw [line width=1.pt] (-1.,2.)-- (1.5,2.);
+	\draw [line width=1.pt] (1.5,2.)-- (1.5,3.);
+	\draw [line width=1.pt] (1.5,3.)-- (-1.,3.);
+	\draw [->,line width=1.pt] (-2.5,4.) -- (-1.0315953503775401,2.702352315488771);
+	\draw [->,line width=1.pt] (-2.5,2.5) -- (-1.,2.5);
+	\draw [->,line width=1.pt] (-2.5,1.) -- (-1.,2.2833448312560893);
+	\draw [->,line width=1.pt] (1.5,2.5) -- (2.5,2.5);
+	\draw (-3.3,4.25) node[anchor=north west] {$x_1$};
+	\draw (-3.3,2.7) node[anchor=north west] {$x_2$};
+	\draw (-3.3,1.26) node[anchor=north west] {$x_3$};
+	\draw (-0.67, 2.8) node[anchor=north west] {$\max(0,t)$};
+	\draw (2.6747622271028213,2.745742538897389) node[anchor=north west] {$y$};
+	\draw (-2.1, 4) node[anchor=north west] {$w_1$};
+	\draw (-2.25,3) node[anchor=north west] {$w_2$};
+	\draw (-2.4,2.1) node[anchor=north west] {$w_3$};
+	\end{tikzpicture}
+	\end{center}
+	
+	Света хочет по наблюдениям $x$ подобрать такие веса $w_i$, чтобы на выходе получились $y$. 
+	
+	\begin{center}
+    	\begin{tabular}{c|c|c|c}
+        	$x_1$ & $x_2$ & $x_3$ & $y$ \\
+        	\hline 
+        	$1$ & $1$ & $2$ & $0.5$\\
+        	\hline 
+        	$1$ & $-1$ & $1$ & $0$ \\
+    	\end{tabular}
+	\end{center}
+
+	
+	\item У Светы есть несколько вот таких перцептронов с неизвестной функцией активации (надо самому выбирать):
+	
+\begin{center}
+	\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+	\clip(-4,0.5) rectangle (3,4.5);
+	\draw [line width=1.pt] (-3.,4.) circle (0.5cm);
+	\draw [line width=1.pt] (-3.,2.5) circle (0.5cm);
+	\draw [line width=1.pt] (-3.,1.) circle (0.5cm);
+	\draw [line width=1.pt] (-1.,3.)-- (-1.,2.);
+	\draw [line width=1.pt] (-1.,2.)-- (1.5,2.);
+	\draw [line width=1.pt] (1.5,2.)-- (1.5,3.);
+	\draw [line width=1.pt] (1.5,3.)-- (-1.,3.);
+	\draw [->,line width=1.pt] (-2.5,4.) -- (-1.0315953503775401,2.702352315488771);
+	\draw [->,line width=1.pt] (-2.5,2.5) -- (-1.,2.5);
+	\draw [->,line width=1.pt] (-2.5,1.) -- (-1.,2.2833448312560893);
+	\draw [->,line width=1.pt] (1.5,2.5) -- (2.5,2.5);
+	\draw (-3.3,4.25) node[anchor=north west] {$1$};
+	\draw (-3.3,2.7) node[anchor=north west] {$x_1$};
+	\draw (-3.3,1.26) node[anchor=north west] {$x_2$};
+	\draw (-0.2, 2.8) node[anchor=north west] {$f(z)$};
+	\draw (2.6747622271028213,2.745742538897389) node[anchor=north west] {$y$};
+	\draw (-2.1, 4) node[anchor=north west] {$w_1$};
+	\draw (-2.25,3) node[anchor=north west] {$w_2$};
+	\draw (-2.4,2.1) node[anchor=north west] {$w_3$};
+	\end{tikzpicture}
+\end{center}
+
+На плоскости проведены две прямые $x_1 + x_2 = 1$ и $x_1 - x_2 = 1$. 	
+	
+\begin{center}
+	\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+	\clip(-2,-5) rectangle (4,-0.5);
+	\draw [line width=2.pt] (-3.,4.) circle (0.5cm);
+	\draw [line width=2.pt] (-3.152000366859971,1.7166134938755313) circle (0.5cm);
+	\draw [line width=2.pt] (-1.,3.)-- (-1.,2.);
+	\draw [line width=2.pt] (-1.,2.)-- (1.5,2.);
+	\draw [line width=2.pt] (1.5,2.)-- (1.5,3.);
+	\draw [line width=2.pt] (1.5,3.)-- (-1.,3.);
+	\draw [->,line width=2.pt] (-2.5,4.) -- (-1.0315953503775401,2.702352315488771);
+	\draw [->,line width=2.pt] (-2.652000366859971,1.7166134938755313) -- (-1.,2.5);
+	\draw [->,line width=2.pt] (1.5,2.5) -- (2.5,2.5);
+	\draw (-3.270567410142784,1.9563548477920916) node[anchor=north west] {$x_1$};
+	\draw (-0.17178835933248715,2.8036772444980356) node[anchor=north west] {$\max(0,t)$};
+	\draw (2.6727939724660277,2.7552588218291243) node[anchor=north west] {$y$};
+	\draw (-1.7695963074065464,3.8809871488813075) node[anchor=north west] {$w_1$};
+	\draw (-2.217466717093972,2.6342127651568465) node[anchor=north west] {$w_2$};
+	\draw (-3.088998325134368,4.2562299245653685) node[anchor=north west] {$1$};
+	\draw [->,line width=2.pt] (1.,-5.) -- (1.,-1.);
+	\draw [->,line width=2.pt] (-2.,-3.) -- (4.,-3.);
+	\draw (2.0191452664357303,-1.251365654023268) node[anchor=north west] {$1$};
+	\draw (-0.3170436273392198,-2.4134077980771345) node[anchor=north west] {$0$};
+	\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0.,-5.)-- (4.,-1.);
+	\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0.,-1.)-- (4.,-5.);
+	\draw (1.910203815430681,-4.0112157461512) node[anchor=north west] {$0$};
+	\draw (3.2417104388257303,-2.4013031924099066) node[anchor=north west] {$0$};
+	\end{tikzpicture}
+\end{center}
+
+Свете нужно собрать нейросетку, которая будет классифицировать объекты с плоскости так, как показано на картинке.
+\end{itemize}
+\end{problem}
+
+
+\begin{problem}{(Логические функции)}
+Есть теорема, которая говорит о том, что с помощью нейросетки можно аппроксимировать почти любую функцию. Попробуйте с помощью нейросеток с минимально возможным числом нейронов описать логический функции, заданные следующими таблицами истинности:
+
+\begin{center}
+\begin{minipage}{0.3\linewidth} 
+	\begin{tabular}{c|c|c}
+	$x_1$ & $x_2$ & $x_1 \cap x_2$ \\
+	\hline 
+	$1$ & $1$ & $1$ \\
+	\hline 
+	$1$ & $0$ & $0$ \\
+	\hline 
+	$0$ & $1$ & $0$ \\
+	\hline 
+	$0$ & $0$ & $0$ \\
+\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}{0.3\linewidth}
+		\begin{tabular}{c|c|c}
+		$x_1$ & $x_2$ & $x_1 \cup x_2$ \\
+		\hline 
+		$1$ & $1$ & $1$ \\
+		\hline 
+		$1$ & $0$ & $1$ \\
+		\hline 
+		$0$ & $1$ & $1$ \\
+		\hline 
+		$0$ & $0$ & $0$ \\
+	\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}{0.3\linewidth}
+		\begin{tabular}{c|c|c}
+		$x_1$ & $x_2$ & $x_1 \mbox{ } XoR \mbox{ } x_2$ \\
+		\hline 
+		$1$ & $1$ & $0$ \\
+		\hline 
+		$1$ & $0$ & $1$ \\
+		\hline 
+		$0$ & $1$ & $1$ \\
+		\hline 
+		$0$ & $0$ & $0$ \\
+	\end{tabular}
+\end{minipage}
+\end{center}
+
+Первые два столбика идут на вход, третий получается на выходе.  Операция из третьей таблицы называется исключающим или (XoR).
+\end{problem}
+
+
+\begin{problem}{(Минималочка)}
+Сколько минимально нейронов необходимо для решения следующих двух задач классификации?  Сколько слоёв минимально должно быть в нейросетке?  Почему?  
+
+\begin{center}
+	\definecolor{qqqqff}{rgb}{0.,0.,1.}
+	\definecolor{qqwuqq}{rgb}{0.,0.39215686274509803,0.}
+	\begin{tikzpicture}[scale = 0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
+	\clip(-5.5,1) rectangle (9,7);
+	\draw [line width=2.pt] (1.,7.)-- (1.02,1.8);
+	\begin{scriptsize}
+	\draw [fill=qqwuqq] (-2.6,4.9) circle (2.5pt);
+	\draw [fill=qqwuqq] (-2.,4.) circle (2.5pt);
+	\draw [fill=qqwuqq] (-1.42,4.9) circle (2.5pt);
+	\draw [fill=qqqqff] (-0.44,5.84) circle (2.5pt);
+	\draw [fill=qqqqff] (-1.52,5.9) circle (2.5pt);
+	\draw [fill=qqqqff] (-3.,6.) circle (2.5pt);
+	\draw [fill=qqqqff] (-4.02,5.7) circle (2.5pt);
+	\draw [fill=qqqqff] (-3.36,4.28) circle (2.5pt);
+	\draw [fill=qqqqff] (-2.4,2.92) circle (2.5pt);
+	\draw [fill=qqqqff] (-1.18,3.38) circle (2.5pt);
+	\draw [fill=qqqqff] (-0.56,4.16) circle (2.5pt);
+	\draw [fill=qqqqff] (0.,5.) circle (2.5pt);
+	\draw [fill=qqqqff] (-3.52,3.32) circle (2.5pt);
+	\draw [fill=qqqqff] (-0.44,2.5) circle (2.5pt);
+	\draw [fill=qqqqff] (-1.44,2.78) circle (2.5pt);
+	\draw [fill=qqqqff] (0.06,6.38) circle (2.5pt);
+	\draw [fill=qqqqff] (-2.96,6.78) circle (2.5pt);
+	\draw [fill=qqqqff] (-4.02,4.56) circle (2.5pt);
+	\draw [fill=qqwuqq] (-2.06,4.62) circle (2.5pt);
+	\draw [fill=qqwuqq] (-2.,5.) circle (2.5pt);
+	\draw [fill=qqwuqq] (-1.72,4.4) circle (2.5pt);
+	\draw [fill=qqwuqq] (-2.46,4.42) circle (2.5pt);
+	\draw [fill=qqqqff] (-2.22,6.26) circle (2.5pt);
+	\draw [fill=qqqqff] (1.84,5.84) circle (2.5pt);
+	\draw [fill=qqqqff] (1.84,4.86) circle (2.5pt);
+	\draw [fill=qqqqff] (1.84,3.62) circle (2.5pt);
+	\draw [fill=qqqqff] (1.84,2.62) circle (2.5pt);
+	\draw [fill=qqqqff] (2.68,2.56) circle (2.5pt);
+	\draw [fill=qqqqff] (2.68,3.38) circle (2.5pt);
+	\draw [fill=qqqqff] (2.54,4.5) circle (2.5pt);
+	\draw [fill=qqqqff] (2.64,5.72) circle (2.5pt);
+	\draw [fill=qqqqff] (5.04,5.6) circle (2.5pt);
+	\draw [fill=qqqqff] (5.,4.56) circle (2.5pt);
+	\draw [fill=qqqqff] (4.92,3.36) circle (2.5pt);
+	\draw [fill=qqqqff] (4.92,2.48) circle (2.5pt);
+	\draw [fill=qqqqff] (5.98,2.32) circle (2.5pt);
+	\draw [fill=qqqqff] (5.98,3.16) circle (2.5pt);
+	\draw [fill=qqqqff] (6.,4.) circle (2.5pt);
+	\draw [fill=qqqqff] (5.94,4.76) circle (2.5pt);
+	\draw [fill=qqqqff] (5.92,5.34) circle (2.5pt);
+	\draw [fill=qqwuqq] (3.42,5.12) circle (2.5pt);
+	\draw [fill=qqwuqq] (3.44,5.94) circle (2.5pt);
+	\draw [fill=qqwuqq] (4.28,5.8) circle (2.5pt);
+	\draw [fill=qqwuqq] (4.28,5.3) circle (2.5pt);
+	\draw [fill=qqwuqq] (3.54,3.98) circle (2.5pt);
+	\draw [fill=qqwuqq] (4.,4.) circle (2.5pt);
+	\draw [fill=qqwuqq] (3.5,2.98) circle (2.5pt);
+	\draw [fill=qqwuqq] (4.18,2.94) circle (2.5pt);
+	\draw [fill=qqwuqq] (3.4,2.32) circle (2.5pt);
+	\draw [fill=qqwuqq] (4.18,2.36) circle (2.5pt);
+	\draw [fill=qqwuqq] (3.98,4.56) circle (2.5pt);
+	\end{scriptsize}
+	\end{tikzpicture}
+\end{center}
+\todo[inline]{Добавить норм ксор для точек как на семе} 
+\end{problem}
+
+
+\begin{problem}{(Универсальный апроксиматор)}
+Доказать, что с помощью однослойной нейронной сетки можно приблизить любую непрерывную функцию от одного аргумента $f(x)$ со сколь угодно большой точностью\footnote{\url{http://neuralnetworksanddeeplearning.com/chap4.html}}.  
+
+\textbf{Hint:}  Вспомните, что любую непрерывную функцию можно приблизить с помощью кусочно-линейной функции (ступеньки). Осознайте как с помощью пары нейронов можно описать такую ступеньку. Соедините все ступеньки в сумму с помощью выходного нейрона. 
+
+\todo[inline]{То же самое про классификацию} 
+\end{problem}
+
+\todo[inline]{ещё задачи на апроксимации от ББ - ???}
+
+
+\section{50 оттенков градиентного спуска}
+
+
+\section{Backpropagation}
+
+Что происходит, когда мы суём пальцы в розетку? Нас бьёт током! Мы делаем ошибку, и она распространяется по нашему телу назад. 
+
+\begin{problem}
+	Изобразите для функции  $f(x,y) = x^2 + xy + (x + y)^2$ граф вычислений. Найдите производные всех выходов по всем входам. Опираясь на граф выпишите частные производные функции $f$.\footnote{По мотивам книги Николенко "Глубокое обучение" (стр. 79)}
+\end{problem} 
+
+
+\begin{problem}
+	Дана нейросетка: 
+\begin{center}
+	\begin{tikzpicture}[line cap=round,line join=roundx=1.0cm,y=1.0cm]
+	\clip(-3.68,0.12) rectangle (12.02,4.76);
+	\draw [line width=2.pt] (-2.56,1.54) circle (0.5215361924162121cm);
+	\draw [line width=2.pt] (-2.5,3.5) circle (0.5215361924162117cm);
+	\draw [line width=2.pt] (0.,4.)-- (2.,4.);
+	\draw [line width=2.pt] (2.,4.)-- (2.,3.);
+	\draw [line width=2.pt] (2.,3.)-- (0.,3.);
+	\draw [line width=2.pt] (0.,3.)-- (0.,4.);
+	\draw [line width=2.pt] (0.,2.)-- (2.,2.);
+	\draw [line width=2.pt] (2.,2.)-- (2.,1.);
+	\draw [line width=2.pt] (2.,1.)-- (0.,1.);
+	\draw [line width=2.pt] (0.,1.)-- (0.,2.);
+	\draw [line width=2.pt] (4.,4.)-- (6.,4.);
+	\draw [line width=2.pt] (6.,4.)-- (6.,3.);
+	\draw [line width=2.pt] (6.,3.)-- (4.,3.);
+	\draw [line width=2.pt] (4.,3.)-- (4.,4.);
+	\draw [line width=2.pt] (4.,2.)-- (6.,2.);
+	\draw [line width=2.pt] (6.,2.)-- (6.,1.);
+	\draw [line width=2.pt] (6.,1.)-- (4.,1.);
+	\draw [line width=2.pt] (4.,1.)-- (4.,2.);
+	\draw [line width=2.pt] (8.,3.)-- (10.,3.);
+	\draw [line width=2.pt] (10.,3.)-- (10.,2.);
+	\draw [line width=2.pt] (10.,2.)-- (8.,2.);
+	\draw [line width=2.pt] (8.,2.)-- (8.,3.);
+	\draw [line width=2.pt] (-1.9787961021013818,3.4813855750750493)-- (0.,3.48);
+	\draw [line width=2.pt] (-1.9787961021013818,3.4813855750750493)-- (0.,1.36);
+	\draw [line width=2.pt] (-2.039699677075342,1.5041172191086443)-- (0.,1.36);
+	\draw [line width=2.pt] (-2.039699677075342,1.5041172191086443)-- (0.,3.48);
+	\draw [line width=2.pt] (2.,3.54)-- (4.,3.54);
+	\draw [line width=2.pt] (2.,1.48)-- (4.,1.48);
+	\draw [line width=2.pt] (2.,1.48)-- (4.,3.54);
+	\draw [line width=2.pt] (2.,3.54)-- (4.,1.48);
+	\draw [line width=2.pt] (6.,3.5)-- (8.,2.46);
+	\draw [line width=2.pt] (6.,1.46)-- (8.,2.46);
+	\draw (4.54, 3.75) node[anchor=north west] {$f(t)$};
+	\draw (4.54,1.8) node[anchor=north west] {$f(t)$};
+	\draw (0.52, 3.75) node[anchor=north west] {$f(t)$};
+	\draw (0.54, 1.8) node[anchor=north west] {$f(t)$};
+	\draw (8.6, 2.8) node[anchor=north west] {$f(t)$};
+	\draw (-2.8, 1.8) node[anchor=north west] {$x_2$};
+	\draw (-2.8, 3.75) node[anchor=north west] {$x_1$};
+	\draw (6.78,3.8) node[anchor=north west] {$w_1^3$};
+	\draw (6.76,2) node[anchor=north west] {$w_{2}^3$};
+	\draw (-1.3,4.4) node[anchor=north west] {$w_{11}^1$};
+	\draw (-1.5,2.2) node[anchor=north west] {$w_{21}^1$};
+	\draw (-1.52,3.55) node[anchor=north west] {$w_{12}^1$};
+	\draw (-1.58,1.4) node[anchor=north west] {$w_{22}^1$};
+	\draw (2.76,4.4) node[anchor=north west] {$w_{11}^2$};
+	\draw (2.68,1.4) node[anchor=north west] {$w_{22}^2$};
+	\draw (2.52,2.25) node[anchor=north west] {$w_{21}^2$};
+	\draw (2.48,3.55) node[anchor=north west] {$w_{12}^2$};
+	\draw (10.5, 2.8) node[anchor=north west] {$y$};
+	\end{tikzpicture}
+\end{center}	
+	\begin{enumerate}
+		\item  Перепишите её как сложную функцию. 
+		
+		\item Запишите эту функцию в матричном виде.
+		
+		\item  Предположим, что $L(W_1,W_2,W_3) = \frac{1}{2} \cdot (y - \hat y)^2$ --- функция потерь, где $W_i$ --- веса $i-$го слоя.  Найдите производную функции $L$ по всем весам $W_i$. 
+		
+		\item Выглядит не очень оптимально, правда? Выпишите все производные в том виде, в котором их было бы удобно использовать для алгоритма обратного распространения ошибки, а затем, сформулируйте сам алгоритм.
+	\end{enumerate}
+\end{problem}
+
+\begin{problem}
+	Как-то раз Вовочка решал задачу классификации. С тех пор у него в кармане завалялась нейросеть: 
+	\begin{center}
+		\begin{tikzpicture}[scale = 1.5, line cap=round,line join=round,x=1.0cm,y=1.0cm]
+		\clip(-4.624679143882289,1.3686903642723092) rectangle (3.8521836267384844,4.8154607149701345);
+		\draw [line width=2.pt] (-2.5,2.5) circle (0.5cm);
+		\draw [line width=2.pt] (-0.5,2.5) circle (0.5cm);
+		\draw [line width=2.pt] (1.5,2.5) circle (0.5cm);
+		\draw [->,line width=2.pt] (-3.5,4.) -- (-2.831496141146421,2.874313115459547);
+		\draw [->,line width=2.pt] (-4.,2.5) -- (-3.,2.5);
+		\draw [->,line width=2.pt] (-2.,2.5) -- (-1.,2.5);
+		\draw [->,line width=2.pt] (0.,2.5) -- (1.,2.5);
+		\draw [->,line width=2.pt] (2.,2.5) -- (3.,2.5);
+		\draw [->,line width=2.pt] (-1.5,4.) -- (-0.8294354120380936,2.8761280490674572);
+		\draw [->,line width=2.pt] (0.5,4.) -- (1.1775032003746246,2.8820939861230355);
+		\draw (-3.686865302879703,4.5) node[anchor=north west] {$1$};
+		\draw (-1.67726421501702,4.5) node[anchor=north west] {$1$};
+		\draw (0.2957986712481599,4.5) node[anchor=north west] {$1$};
+		\draw (-4.320194130569761,2.805859627107445) node[anchor=north west] {$x$};
+		\draw (3.1214195947884176,2.7693214255099416) node[anchor=north west] {$y$};
+		\draw (-3.7112241039447054,3.07380643882247) node[anchor=north west] {$w_1^1$};
+		\draw (-3.114433477852151,3.9750820782275555) node[anchor=north west] {$w_0^1$};
+		\draw (-1.7138024166145234,3.122524040952475) node[anchor=north west] {$w_1^2$};
+		\draw (-1.1535499921194723,4.13341428515007) node[anchor=north west] {$w_0^2$};
+		\draw (1.0387421037307276,4.109055484085068) node[anchor=north west] {$w_0^3$};
+		\draw (0.2836192707156588,3.0859858393549713) node[anchor=north west] {$w_1^3$};
+		\end{tikzpicture}
+	\end{center} 
+	
+	В качестве функции активации используется сигмоид: $f(t) = \frac{e^t}{1 + e^t}$.  Есть два наблюдения: $x_1 = 1, x_2 = 5$, $y_1 =1$, $y_2 = 0$. Скорость обучения $\gamma = 1$. В качестве инициализации взяты нулевые веса. Как это обычно бывает, Вовочка обнаружил её в своих штанах после стирки и очень обрадовался.  Теперь он собирается сделать два шага стохастического градиентного спуска, используя алгоритм обратного распространения ошибки. Помогите ему. 
+\end{problem}
+
+
+\begin{problem}
+	Пусть у нас есть нейронка: 
+	
+	$$ 
+	y = f(X \cdot W_2 ) \cdot W_1 
+	$$
+	
+	Как для функции потерь $L(W_1, W_2) = (y - \hat y)^2$ будет выглядеть алгоритм обратного распространения ошибки, если $f(t) = ReLU(t) =  \max(0; t)$? Найдите все выходы, все промежуточные производные.  Опишите правило, по которому производная будет накапливаться, а также сам шаг градиентного спуска. 
+\end{problem} 
+
+
+\begin{problem}
+	Маша (ОПЯТЬ ОНА?!) собрала нейросеть: 
+	
+	\begin{equation*}
+	y =   \max \left( 0;  X \cdot  \begin{pmatrix} 1 & -1 \\ 0.5 & 0 \end{pmatrix} \right) \cdot \begin{pmatrix} 0.5 \\ 1 \end{pmatrix} 
+	\end{equation*}
+
+	Теперь Маша внимательно смотрит на неё.
+	
+	\begin{enumerate}
+		\item  Первый слой нашей нейросетки --- линейный. По какой формуле делается forward pass? Предположим, что на вход пришло наблюдение $x = (1, 2)$. Сделайте через этот слой forward pass и найдите выход из слоя.
+		
+		\item Найдите для первого слоя производную выхода по входу. При обратном движении по нейросетке, в первый слой пришёл накопленный градиент $(-1, 0)$. Каким будет новое накопленное значение градиента, которое выплюнет из себя линейный слой? 
+		
+		\item Второй слой нейросетки ---- функция активации, $ReLU.$  По какой формуле делается forward pass? На вход в него поступило значение $(2, -1)$. Сделайте через него forward pass. 
+		
+		\item Найдите для второго слоя производную выхода по входу. При обратном движении по нейросетке во второй слой пришёл накопленный градиент $(-1, -2)$.  Каким будет новое накопленное значение градиента, которое выплюнет из себя $ReLU$? 
+		
+		\item Третий слой нейросетки --- линейный.  По какой формуле делается forward pass? Пусть на вход поступило значение $(2,0)$.  Сделайте через него forward pass. 
+		
+		\item Найдите для третьего слоя производную выхода по входу. При обратном движении по нейросетке, в третий слой пришёл накопленный градиент $-2$. Каким будет новое накопленное значение градиента, которое выплюнет из себя линейный слой? 
+		
+		\item Мы решаем задачу Регрессии. В качестве функции ошибки мы используем $MSE$. Пусть для рассматриваемого наблюдения реальное значение $y = 0$. Найдите значение $MSE$. Чему равна производная $MSE$ по входу (прогнозу)? Каким будет накопленное значение градиента, которое $MSE$ выплюнет из себя в предыдущий слой нейросетки, если изначально значение градиента инициализированно единицей? 
+		
+		\item Пусть скорость обучения $\gamma = 1$.  Сделайте для весов нейросети шаг градиентного спуска. 
+	\end{enumerate}
+
+		Посидела Маша, посидела, и поняла, что неправильно она всё делает. В реальности перед ней не задача регрессии, а задача классификации. 
+	
+	\begin{enumerate}	
+		\item Маша навинтила поверх второго линейного слоя сигмоиду. Как будет для неё выглядеть forward pass? Сделайте его. Найдите для сигмоиды производную выхода по входу.
+		
+		\item В качестве функции потерь Маша использует $logloss.$ Как для этой функции потерь выглядит forward pass? Сделайте его. Найдите для $logloss$ производную выхода по входу. 
+		
+		\item Как будет выглядеть backward pass через $logloss$ и сигмоиду? Прделайте его. Как изменится процедура градиентного спуска для остальной части сети? 
+	\end{enumerate}
+
+\end{problem} 
+
+
+
+
+
+\section{Активация} 
+
+\todo[inline]{Сюда перекинуть всё из task2}
+
+\begin{problem}
+Та, в чьих руках находится лёрнинг (это Маша), решила немного поэкспериментировать с выходами из своей сетки. 
+\begin{itemize}
+	\item[a)]  Для начала Маша решила, что хочет решать задачу классификации на два класса и получать на выходе вероятность принадлежности к первому. Что ей надо сделать с последним слоем сетки? 
+	\item[b)]  Теперь Маша хочет решать задачу классификации на $K$ классов. Что ей делать с последним слоем? 
+	\item[c)]  Новые вводные! Маша хочет спрогнозировать рейтинг фильма на "Кинопоиске". Он измеряется по шкале от $0$ до $10$ и принимает любое непрерывное значение. Как Маша может приспособить для этого свою нейронку? 
+	\item[d)]  У Маши есть куча новостей. Каждая новость может быть спортивной, политической или экономической. Иногда новость может относится сразу к нескольким категориям. Как Маше собрать нейросетку для решения этой задачи?  Как будет выглядеть при этом функция ошибки? 
+	\item[e)]  Маша пошла в кафе. А там куча народу. Сейчас она сидит за столиком, попивает ванильный топлёный кортадо и думает о нём, о лёрнинге.  Сейчас мысль такая: как можно спрогнозировать число людей в кафе так, чтобы на выходе сетка всегда прогнозировала целое число. Надо ли как-то при этом менять функцию потерь? 
+	% \item[f)] Пункт с регрессией и весами из денег 
+\end{itemize}
+\end{problem}
+
+
+
+
+\section{Регуляризаторы}
+
+% \begin{problem}
+% 	Маша услышала про машин лёрнинг и решила, что они и есть та самая Маша, которой этот лёрнинг принадлежит. Теперь она собирается обучить нейронную сеть для решения задачи регрессии, На вход в неё идёт $12$ переменных, в сетке есть $3$ скрытых слоя. В пером слое $300$ нейронов, во втором $200$, в третьем $100$. 
+	
+% 	\begin{itemize}
+% 		\item[a)] Сколько параметров предстоит оценить Маше?  Сколько наблюдений вы бы на её месте использовали? 
+% 		\item[b)] Пусть в каждом слое была отключена половина нейронов. Сколько коэффициентов необходимо оценить?
+% 		\item[c)] Предположим, что Маша решила после первого слоя добавить в свою сетку Dropout c вероятностью $p$.  Какова вероятность того, что отключится весь слой? 
+% 		\item[d)] Маша добавила Dropout c вероятностью $p$. после каждого слоя. Какова вероятность того, что один из слоёв отключится и сетка не сможет учиться? 
+% 		\item[e)] Пусть случайная величина $N$ --- это число включённых нейронов. Найдите её математическое ожидание и дисперсию. Если Маша хочет проредить сетку на четверть, какое значение $p$ она должна поставить? 
+% 		\item[f)] Пусть случайная величина $P$ --- это число параметров в нейросети, которое необходимо оценить. Найдите её математическое ожидание и дисперсию. Почему найденное вами математическое ожидание выглядит очень логично? Что оно вам напоминает? Обратите внимание на то, что смерть одного из параметров легко может привести к смерти другого.
+% 	\end{itemize}
+% \end{problem}
+
+
+% %\begin{problem}
+% %  Сделать задачу по связи ранней остановки и регуляризатора 
+% %\end{problem}
+
+% \section*{Ещё задача}
+
+% Если вы никогда не решали эту задачку, рекомендую сделать это. Она довольно неплохо открывает чакру на работу с регуляризаторами, и показывает как именно они стягивают к нулю коэффициенты, не давая модели переобучаться. В рамках нейросеток механизм точно такой же. 
+
+% \begin{problem}
+% 	Вася измерил вес трёх покемонов,  $y_1=6$, $y_2=6$, $y_3=10$.  Вася хочет спрогнозировать вес следующего покемона. Модель для веса покемонов у Васи очень простая, $y_i = \beta + \varepsilon_i$, поэтому прогнозирует Вася по формуле $\hat y_i = \hat \beta$.
+	
+% 	Для оценки параметра $\beta$ Вася использует следующую целевую функцию:
+	
+% 	\[
+% 	\sum (y_i - \hat \beta)^2 + \lambda \cdot \hat \beta^2
+% 	\]
+	
+% 	\begin{enumerate}
+% 		\item[a)] Найдите оптимальное $\hat \beta$ при $\lambda =0$.
+% 		\item[б)] Найдите оптимальное $\hat \beta$ при произвольном $\lambda$. Правда ли, что чем больше $\lambda$, тем меньше $\beta$? 
+% 		\item[в)] Подберите оптимальное $\lambda$ с помощью кросс-валидации leave one out («выкинь одного»). При такой валидации на первом шаге мы оцениваем модель на всей выборке без первого наблюдения, а на первом тестируем её. На втором шаге мы оцениваем модель на всей выборке без второго наблюдения, а на втором тестируем её. И так далее $n$ раз. Каждое наблюдение является отдельным фолдом.
+% 		\item[г)] Найдите оптимальное $\hat \beta$ при $\lambda_{CV}$.
+% 	\end{enumerate}
+% \end{problem}
+
+% \begin{problem}
+% Есит нейрон с ReLU в качестве инициализации используется распределение ко-ко-ко. С какой вероятностью нейрон умрёт сразу же при инициализации? Какое распределение и с какими параметрами надо использовать, чтобы этого не произошло? Сюда же про инициализацию Хе.
+% \end{problem}
+
+% родить задачу из статьи dropout vs batchnorm
+
+% задача на бачнорм из лекций воронцова
+
+
+\section{Всего лишь кубики LEGO} 
+
+% сюда tasks6, LSTM, w2v и тп
+
+
+\end{document}
+
+
