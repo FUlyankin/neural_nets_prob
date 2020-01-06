@@ -5,8 +5,8 @@
 \usepackage{amsmath,amsfonts,amssymb,amsthm,mathtools}  
 \mathtoolsset{showonlyrefs=true}  % Показывать номера только у тех формул, на которые есть \eqref{} в тексте.
 
-\usepackage[english, russian]{babel} % выбор языка для документа
-% \usepackage[utf8]{inputenc}          % utf8 кодировка
+\usepackage[british,russian]{babel} % выбор языка для документа
+\usepackage[utf8]{inputenc}          % utf8 кодировка
 
 % Основные шрифты 
 \usepackage{fontspec}         
@@ -20,6 +20,8 @@
 \usepackage{graphicx} % Для вставки рисунков                
 \usepackage{graphics}
 \graphicspath{{images/}{pictures/}}   % папки с картинками
+
+\usepackage[figurename=Картинка]{caption}
 
 \usepackage{wrapfig}    % обтекание рисунков и таблиц текстом
 
@@ -101,13 +103,19 @@
 \definecolor{itemizeblue}{rgb}{0, 0.45, 0.70}
 
 \newcommand*{\MyPoint}{\tikz \draw [baseline, fill=itemizeblue, draw=blue] circle (2.5pt);}
-
 \renewcommand{\labelitemi}{\MyPoint}
+
+\AddEnumerateCounter{\asbuk}{\@asbuk}{\cyrm}
+\renewcommand{\theenumi}{\asbuk{enumi}}
 
 % расстояние в списках
 \setlist[itemize]{parsep=0.4em,itemsep=0em,topsep=0ex}
 \setlist[enumerate]{parsep=0.4em,itemsep=0em,topsep=0ex}
 
+% эпиграфы
+\usepackage{epigraph}
+\setlength\epigraphwidth{.6\textwidth}
+\setlength\epigraphrule{0pt}
 
 %%%%%%%%%% Свои команды %%%%%%%%%%
 
@@ -204,7 +212,7 @@
   }
 
 % Окружение, чтобы можно было убирать решения из pdf
-\NewEnviron{solution}{%
+\NewEnviron{sol}{%
   \iftoggle{lecture}
     {\noindent \textbf{\large Решение:} \\ \\ \BODY}
     {}%
@@ -212,48 +220,84 @@
   
 % выделение по тексту важных вещей
 \newcommand{\indef}[1]{\textbf{ \color{green} #1}} 
-
+	
 \title{Тятя! Тятя! Наши сети притащили мертвеца!}
 \date{ }
 \author{Ульянкин Филипп}
 
 \begin{document}
-	
+
+% Если переключить в false, все sol исчезнут из pdf
+\toggletrue{lecture}
+%\togglefalse{lecture}
+
 \maketitle
 	
 \begin{abstract}
-    Если ты не понимаешь как самостоятельно реализовать самую топорную версию модели, а потом ввести в неё несколько простеньких улучшений --- ты не понимаешь эту модель.
+   Однажды вечером Маша читала книгу. 
+   
+   Благодаря символическому дифференцированию вам никогда не придется заниматься реализацией агоритма обратного распространения вручную. Поэтому не будем тратить время на его формулировку\footnote{Франсуа Шолле, Глубокое обучение на Python, стр. 77}.
+   
+   Тут ещё пара таких цитат и рофл из Гудфелоу
+   
+   \indef{Доколе можно такое терпеть?} Если ты не понимаешь как самостоятельно реализовать самую топорную версию модели, а потом ввести в неё несколько простеньких улучшений --- ты не понимаешь эту модель.
     
-    Ты никогда не сможешь сполна проникнуться ей, понять все её прелести, изучить и сполна использовать все её рычажки. Ты никогда не сможешь немного видоизменить её и применить те же самые принципы для новой задачи. Она никогда не будет с тобой искренней. Ты будешь думать, что она показывает свои самые лучшие метрики, в то время, как на самом деле, она будет улыбаться другому. Тому кто знает, где у неё гиперпараметр $G$.
+    % Ты никогда не сможешь сполна проникнуться ей, понять все её прелести, изучить и сполна использовать все её рычажки. Ты никогда не сможешь немного видоизменить её и применить те же самые принципы для новой задачи. Она никогда не будет с тобой искренней. Ты будешь думать, что она показывает свои самые лучшие метрики, в то время, как на самом деле, она будет улыбаться другому. Тому кто знает, где у неё гиперпараметр $G$.
     
-    Как понять внутренности и суметь написать код, описывающий их? Как заслужить её любовь и искренность? Надо окунаться в математику, которая за ней стоит. Однако она иногда бывает слишком сложной. Это отбивает всё желание быть с ней полностью на одной волне. 
+    % Как понять внутренности и суметь написать код, описывающий их? Как заслужить её любовь и искренность? Надо окунаться в математику, которая за ней стоит. Однако она иногда бывает слишком сложной. Это отбивает всё желание быть с ней полностью на одной волне. 
     
-    Эта серия виньеток сделана для тех, кто хочет не просто поиграться с прелестями машинного обучения. Она для тех, кто хочет досконально их прочувствовать. Через серию инфантильных задачек мы будем идти от простых вещей к сложным до тех пор, пока не окажемся на пике. 
+    % Эта серия виньеток сделана для тех, кто хочет не просто поиграться с прелестями машинного обучения. Она для тех, кто хочет досконально их прочувствовать. Через серию инфантильных задачек мы будем идти от простых вещей к сложным до тех пор, пока не окажемся на пике. 
     
-    Здесь и сегодня пойдёт речь о нейронных сетках. Мы попробуем понять как работает Backpropagation ручками на бумажке. Шаг за шагом, .... 
+    % Здесь и сегодня пойдёт речь о нейронных сетках. Мы попробуем понять как работает Backpropagation ручками на бумажке. Шаг за шагом, .... 
     
-    Послать тут всех хейтеров нахрен и написать что это не дип лернинг от бенджи и ко, а инфантильные задачи на пару вечеров
+    % Послать тут всех хейтеров нахрен и написать что это не дип лернинг от бенджи и ко, а инфантильные задачи на пару вечеров
     \todo[inline]{Написать по-нормальному abstract!}
 \end{abstract}
 	
 \tableofcontents
 
-\todo[inline]{Все должно быть в концепте маши кому принадлежит лёрнинг}
+\todo[inline]{Все должно быть в концепте маши кому принадлежит лёрнинг, все задачки должны ложиться в историю про неё, решения должны быть органично оторваны от личности Маши.}
 	
 \section{Всего лишь функция} 
 
-\begin{problem}{(От регрессии к нейросети)}
+\epigraph{Ты всего лишь машина, только имитация жизни. Робот сочинит симфонию? Робот превратит кусок холста в шедевр искусства?}{Из фильма <<Я, робот>> (2004)}
 
+\begin{problem}{(От регрессии к нейросети)}
+Тут лёгкая задачка про то как регрессия превращается в нейронку + пункт про то что без функции активации будет то же самое на примере 2 регрессоров
 \end{problem}
 
-
 \begin{problem}{(Из картинки в формулу)}
-Маша сходила в кофейню на Тверской выпить кофе. 
-
-Добродум хозяин кофейни на Тверской. Он хочет понять насколько сильно будет заполнена кофейня в следущие выходные. Для этого по старым данным он обучил нейросетку. На вход она принимает три фактора: температуру за окном, $x_1$, пол баристы на смене, $x_2$ и факт наличия на Тверской митинга, $x_3$.  В качестве функции активации Добродум использует $ReLU.$ 
+Добродум хозяин кофейни на Тверской. Он хочет понять насколько сильно будет заполнена кофейня в следующие выходные. Для этого по старым данным он обучил нейросетку. На вход она принимает три фактора: температуру за окном, $x_1$, факт наличия на Тверской митинга, $x_2$ и пол баристы на смене, $x_3$.  В качестве функции активации Добродум использует $ReLU.$ 
 
 \begin{center}
-	\includegraphics[scale=0.2]{task_1.png}
+\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+
+\draw [line width=1.pt] (-3,1.5) circle (0.5cm) node {$x_1$};
+\draw [line width=1.pt] (-3,-0.5) circle (0.5cm) node {$x_2$};
+\draw [line width=1.pt] (-3,-2.5) circle (0.5cm) node {$x_3$};	
+
+\draw [line width=1.pt] (-1,0)--(1,0)--(1,1)--(-1,1)--cycle;
+\draw (0,0.5) node {$f(h)$};
+\draw [line width=1.pt] (-1,-2)--(1,-2)--(1,-1)--(-1,-1)--cycle;
+\draw (0,-1.5) node {$f(h)$};
+
+\draw [line width=1.pt] (3,1.5) circle (0.5cm) node {$1$};	
+\draw [line width=1.pt] (2,-1)--(4,-1)--(4,0)--(2,0)--cycle;
+\draw (3,-0.5) node {$f(h)$};
+
+\draw [line width=1.pt] (-2.5,1.5) -- (-1,0.5) node[pos=0.5,above] {\small $5$};
+\draw [line width=1.pt] (-2.5,1.5) -- (-1,-1.5) node[pos=0.3,left] {\small $-2$};
+\draw [line width=1.pt] (-2.5,-0.5) -- (-1,0.5) node[pos=0.5,left] {\small $-60$};
+\draw [line width=1.pt] (-2.5,-0.5) -- (-1,-1.5)  node[pos=0.5,left] {\small  $-80$};
+\draw [line width=1.pt] (-2.5,-2.5) -- (-1,0.5) node[near start,left] {\small $0.5$};
+\draw [line width=1.pt] (-2.5,-2.5) -- (-1,-1.5)  node[near start,below] {\small  $2$};
+
+\draw [line width=1.pt] (1,0.5) -- (2,-0.5) node[pos=0.25,right] {\small $1$};
+\draw [line width=1.pt] (1,-1.5) -- (2,-0.5) node[pos=0.2,right] {\small $0.2$};
+\draw [line width=1.pt] (3,1) -- (3,0) node[pos=0.5,right] {\small  $4$};
+
+\draw [->] (4,-0.5) -- (5,-0.5) node[right] {$\hat y$};
+\end{tikzpicture}
 \end{center}
 
 \begin{enumerate}
@@ -263,156 +307,466 @@
 \end{enumerate}
 \end{problem}
 
+\begin{sol}
+Будем постепенно идти по сетке и делать вычисления. Подаём все значения в первый нейрон, получаем: 
 
+$$
+h_1 = \max(0, 5 \cdot 20 + (-60) \cdot 0 + 0.5 \cdot 1) = \max(0, 100.5) = 100.5
+$$
+
+Ровно то же самое делаем со вторым нейроном: 
+
+$$
+h_2 = \max(0, -2 \cdot 20 + (-80) \cdot 0 + 2 \cdot 1) = \max(0, -38) = 0
+$$
+
+Дальше результат скрытых нейронов идёт во второй слой: 
+
+$$
+\hat y = \max(0, 1 \cdot 100.5 + 0.2 \cdot 0 + 4 \cdot 1) = 104.5
+$$
+
+Это и есть итоговый прогноз.
+
+\begin{center}
+\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+
+\draw [line width=1.pt] (-3,1.5) circle (0.5cm) node {$20$};
+\draw [line width=1.pt] (-3,-0.5) circle (0.5cm) node {$0$};
+\draw [line width=1.pt] (-3,-2.5) circle (0.5cm) node {$1$};	
+
+\draw [line width=1.pt] (-1,0)--(1,0)--(1,1)--(-1,1)--cycle;
+\draw (0,0.5) node {$100.5$};
+\draw [line width=1.pt] (-1,-2)--(1,-2)--(1,-1)--(-1,-1)--cycle;
+\draw (0,-1.5) node {$0$};
+
+\draw [line width=1.pt] (3,1.5) circle (0.5cm) node {$1$};	
+\draw [line width=1.pt] (2,-1)--(4,-1)--(4,0)--(2,0)--cycle;
+\draw (3,-0.5) node {$104.5$};
+
+\draw [line width=1.pt] (-2.5,1.5) -- (-1,0.5) node[pos=0.5,above] {\small $5$};
+\draw [line width=1.pt] (-2.5,1.5) -- (-1,-1.5) node[pos=0.3,left] {\small $-2$};
+\draw [line width=1.pt] (-2.5,-0.5) -- (-1,0.5) node[pos=0.5,left] {\small $-60$};
+\draw [line width=1.pt] (-2.5,-0.5) -- (-1,-1.5)  node[pos=0.5,left] {\small  $-80$};
+\draw [line width=1.pt] (-2.5,-2.5) -- (-1,0.5) node[near start,left] {\small $0.5$};
+\draw [line width=1.pt] (-2.5,-2.5) -- (-1,-1.5)  node[near start,below] {\small  $2$};
+
+\draw [line width=1.pt] (1,0.5) -- (2,-0.5) node[pos=0.25,right] {\small $1$};
+\draw [line width=1.pt] (1,-1.5) -- (2,-0.5) node[pos=0.2,right] {\small $0.2$};
+\draw [line width=1.pt] (3,1) -- (3,0) node[pos=0.5,right] {\small  $4$};
+
+\draw [->] (4,-0.5) -- (5,-0.5) node[right] {$\hat y$};
+\end{tikzpicture}
+\end{center}
+
+Теперь по мотивам наших вычислений запишем нейронку как функцию. Начинать будем с конца:
+
+$$
+\hat y = f(1 \cdot h_1 + 0.2 \cdot h_2 + 4 \cdot 1)
+$$
+
+Подставляем вместо $h_1$ и $h_2$ вычисления, которые происходят на первом слое нейронки: 
+
+\begin{multline*}
+\hat y = f(1 \cdot f(5 \cdot x_1 -60 \cdot x_2 + 0.5 \cdot x_3) + 0.2 \cdot f(-2 \cdot x_1 -80 \cdot x_2 + 2 \cdot x_3) + 4 \cdot 1) = \\ = \max(0, \max(0, 5 \cdot x_1 -60 \cdot x_2 + 0.5 \cdot x_3) + 0.2 \cdot \max(0, -2 \cdot x_1 -80 \cdot x_2 + 2 \cdot x_3) + 4).
+\end{multline*}
+
+Обучение нейронной сетки на самом деле эквивалентно обучению такой сложной нелинейной функции. 
+\end{sol}
+
+
+%%%-------------------------------------------
 \begin{problem}{(Из формулы в картинку)}
 Теперь в обратную сторону. Пусть у нас есть вот такая функция. 
 \[
-y = \max(0, 4 \cdot \max(0, 3x_1 + 4x_2 + 1) + 2 \cdot \max(0, 3x_1 + 2x_2 + 7) + 6)
+y = \max(0, 4 \cdot \max(0, 3 \cdot x_1 + 4 \cdot x_2 + 1) + 2 \cdot \max(0, 3 \cdot x_1 + 2 \cdot x_2 + 7) + 6)
 \]
 
 Нарисуйте эту функцию в виде нейросетки.
 \end{problem}
 
+\begin{sol}
+Начнём рисовать картинку с конца. На выход выплёвывается либо $0$, либо комбинация из двух входов: 
 
+$$
+\hat y = ReLU(4 \cdot h_1 + 2 \cdot h_2 + 6)
+$$
+
+Каждый из входов --- это снова либо $0$, либо комбинация из двух входов. 
+
+$$
+y = \max(0, {\color{red} 4} \cdot \underbrace{\max(0, 3 \cdot x_1 +  4 \cdot x_2 + 1)}_{h_1} + {\color{red} 2} \cdot \underbrace{\max(0, {\color{purp} 3} \cdot x_1 + {\color{purp} 2} \cdot x_2 + {\color{purp} 7})}_{h_2} + {\color{red} 6})
+$$
+
+Получается, что на первом слое находится два нейрона, которые передают свои выходы в третий:
+
+\begin{center}
+\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+
+\draw [line width=1.pt] (-3,1.5) circle (0.5cm) node {$1$};
+\draw [line width=1.pt] (-3,-0.5) circle (0.5cm) node {$x_1$};
+\draw [line width=1.pt] (-3,-2.5) circle (0.5cm) node {$x_2$};	
+
+\draw [line width=1.pt] (-1,0)--(1,0)--(1,1)--(-1,1)--cycle;
+\draw (0,0.5) node {$ReLU$};
+\draw (1,1) node[right] {$h_1$};
+\draw [line width=1.pt] (-1,-2)--(1,-2)--(1,-1)--(-1,-1)--cycle;
+\draw (0,-1.5) node {$ReLU$};
+\draw (1,-2) node[right] {$h_2$};
+
+\draw [line width=1.pt] (3,1.5) circle (0.5cm) node {$1$};	
+\draw [line width=1.pt] (2,-1)--(4,-1)--(4,0)--(2,0)--cycle;
+\draw (3,-0.5) node {$ReLU$};
+
+\draw [line width=1.pt] (-2.5,1.5) -- (-1,0.5) node[near start,above] {\small $1$};
+\draw [line width=1.pt, purp] (-2.5,1.5) -- (-1,-1.5) node[near start,right] {\small \color{purp} $7$};
+\draw [line width=1.pt] (-2.5,-0.5) -- (-1,0.5) node[near start,above] {\small $3$};
+\draw [line width=1.pt, purp] (-2.5,-0.5) -- (-1,-1.5)  node[near start,above] {\small \color{purp} $3$};
+\draw [line width=1.pt] (-2.5,-2.5) -- (-1,0.5) node[near start,left] {\small $4$};
+\draw [line width=1.pt, purp] (-2.5,-2.5) -- (-1,-1.5)  node[near start,below] {\small \color{purp} $2$};
+
+\draw [line width=1.pt, red] (1,0.5) -- (2,-0.5) node[pos=0.5,above] {\small \color{red} $4$};
+\draw [line width=1.pt, red] (1,-1.5) -- (2,-0.5) node[pos=0.5,below] {\small \color{red} $2$};
+\draw [line width=1.pt, red] (3,1) -- (3,0) node[pos=0.5,right] {\small \color{red} $6$};
+
+\draw [->] (4,-0.5) -- (5,-0.5) node[right] {$\hat y$};
+\end{tikzpicture}
+\end{center}
+\end{sol}
+
+
+%%%-------------------------------------------
 \begin{problem}{(Армия регрессий)}
-Парни очень любят Свету, а Света любит собирать перцептроны и думать по вечерам об их весах и функциях активации. Сегодня она решила разобрать свои залежи из перцептронов и как следует упорядочить их. 
+Парни очень любят Машу, а Маша с недавних пор любит собирать перcептроны и думать по вечерам об их весах и функциях активации. Сегодня она решила разобрать свои залежи из перcептронов и как следует упорядочить их. 
 
-\begin{itemize}
-	\item Для перцептрона 
+\begin{enumerate}
 
-	\begin{center}
-	\definecolor{cqcqcq}{rgb}{0.7529411764705882,0.7529411764705882,0.7529411764705882}
-	\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
-	\clip(-4,1) rectangle (3.306148366367316,4.5);
-	\draw [line width=1.pt] (-3.,4.) circle (0.5cm);
-	\draw [line width=1.pt] (-3.152000366859971,1.7166134938755313) circle (0.5cm);
-	\draw [line width=1.pt] (-1.,3.)-- (-1.,2.);
-	\draw [line width=1.pt] (-1.,2.)-- (1.5,2.);
-	\draw [line width=1.pt] (1.5,2.)-- (1.5,3.);
-	\draw [line width=1.pt] (1.5,3.)-- (-1.,3.);
-	\draw [->,line width=1.pt] (-2.5,4.) -- (-1.0315953503775401,2.702352315488771);
-	\draw [->,line width=1.pt] (-2.652000366859971,1.7166134938755313) -- (-1.,2.5);
-	\draw [->,line width=1.pt] (1.5,2.5) -- (2.5,2.5);
-	\draw (-3.4,2) node[anchor=north west] {$x_1$};
-	\draw (-0.8,2.8) node[anchor=north west] {$\max(0,t)$};
-	\draw (2.6,2.7) node[anchor=north west] {$y$};
-	\draw (-1.8,3.9) node[anchor=north west] {$w_1$};
-	\draw (-2.5,2.6) node[anchor=north west] {$w_2$};
-	\draw (-3.2,4.25) node[anchor=north west] {$1$};
-	\end{tikzpicture}
-	\end{center}
-	
-	нужно подобрать веса так, чтобы он превращал $x_1 = 0$ в $y=1$, а $x_1 = 1$ в $y=0$.
-	
-	\item  Для перцепторона 
-	
-	\begin{center}
-	\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
-	\clip(-4,0.5) rectangle (3.3,4.5);
-	\draw [line width=1.pt] (-3.,4.) circle (0.5cm);
-	\draw [line width=1.pt] (-3.,2.5) circle (0.5cm);
-	\draw [line width=1.pt] (-3.,1.) circle (0.5cm);
-	\draw [line width=1.pt] (-1.,3.)-- (-1.,2.);
-	\draw [line width=1.pt] (-1.,2.)-- (1.5,2.);
-	\draw [line width=1.pt] (1.5,2.)-- (1.5,3.);
-	\draw [line width=1.pt] (1.5,3.)-- (-1.,3.);
-	\draw [->,line width=1.pt] (-2.5,4.) -- (-1.0315953503775401,2.702352315488771);
-	\draw [->,line width=1.pt] (-2.5,2.5) -- (-1.,2.5);
-	\draw [->,line width=1.pt] (-2.5,1.) -- (-1.,2.2833448312560893);
-	\draw [->,line width=1.pt] (1.5,2.5) -- (2.5,2.5);
-	\draw (-3.3,4.25) node[anchor=north west] {$x_1$};
-	\draw (-3.3,2.7) node[anchor=north west] {$x_2$};
-	\draw (-3.3,1.26) node[anchor=north west] {$x_3$};
-	\draw (-0.67, 2.8) node[anchor=north west] {$\max(0,t)$};
-	\draw (2.6747622271028213,2.745742538897389) node[anchor=north west] {$y$};
-	\draw (-2.1, 4) node[anchor=north west] {$w_1$};
-	\draw (-2.25,3) node[anchor=north west] {$w_2$};
-	\draw (-2.4,2.1) node[anchor=north west] {$w_3$};
-	\end{tikzpicture}
-	\end{center}
-	
-	Света хочет по наблюдениям $x$ подобрать такие веса $w_i$, чтобы на выходе получились $y$. 
-	
-	\begin{center}
-    	\begin{tabular}{c|c|c|c}
-        	$x_1$ & $x_2$ & $x_3$ & $y$ \\
-        	\hline 
-        	$1$ & $1$ & $2$ & $0.5$\\
-        	\hline 
-        	$1$ & $-1$ & $1$ & $0$ \\
-    	\end{tabular}
-	\end{center}
+\item В ящике стола Маша нашла перcептрон с картинки \ref{perp1} Маша хочет подобрать веса так, чтобы он реализовывал логическое отрицание, то есть превращал $x_1 = 0$ в $y=1$, а $x_1 = 1$ в $y=0$.
 
-	
-	\item У Светы есть несколько вот таких перцептронов с неизвестной функцией активации (надо самому выбирать):
+\begin{minipage}{0.49\linewidth}
+\begin{figure}[H]
+\caption{} \label{perp1}
+\begin{center}
+\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+\clip(-4,0) rectangle (3,4.5); % чтобы выравнять картинки по размерам
+\draw [line width=1.pt] (-3,4) circle (0.5cm) node {$1$};
+\draw [line width=1.pt] (-3,2) circle (0.5cm) node {$x_1$};
+
+\draw [line width=1.pt] (-1,3.5)--(-1,2.5)--(1.5,2.5)-- (1.5,3.5) -- cycle;
+
+\draw [->, line width=1.pt] (-2.5,4) -- (-1.1,3.1) node[pos=0.3,above] {\small $w_1$};
+\draw [->, line width=1.pt] (-2.5,2) -- (-1.1,2.9) node[pos=0.3,above] {\small $w_2$};
+\draw [->, line width=1.pt] (1.5,3) -- (2.5,3) node[pos=1,right] {$\hat y$};
+\draw (0.3,3) node {$\max(0,h)$};
+\end{tikzpicture}
+\end{center}
+\end{figure}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\linewidth}
+\begin{figure}[H]
+\caption{} \label{perp2}
+\begin{center}
+\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+\clip(-4,0) rectangle (3,4.5);
+\draw [line width=1.pt] (-3,4) circle (0.5cm) node {$x_1$};
+\draw [line width=1.pt] (-3,2.5) circle (0.5cm) node {$x_2$};
+\draw [line width=1.pt] (-3,1) circle (0.5cm) node {$x_3$};
+
+\draw [line width=1.pt] (-1,3)--(-1,2)--(1.5,2)--(1.5,3)--cycle;
+\draw (0.3,2.5) node {$\max(0,h)$};
+
+\draw [->, line width=1.pt] (-2.5,4)--(-1.1,2.7) node[pos=0.5,above] {\small $w_1$};
+\draw [->, line width=1.pt] (-2.5,2.5)--(-1.1,2.5) node[pos=0.3,above] {\small $w_2$};
+\draw [->, line width=1.pt] (-2.5,1)--(-1.1,2.3) node[pos=0.5,below] {\small $w_3$};
+\draw [->, line width=1.pt] (1.5,2.5)--(2.5,2.5) node[pos=1,right] {$\hat y$};
+\end{tikzpicture}
+\end{center}
+\end{figure}
+\end{minipage}
+
+\item В тумбочке среди носков Маша нашла перcептрон, с картинки \ref{perp2}, Маша хочет подобрать такие веса $w_i$, чтобы персептрон превращал $x$ из таблички в соответствующие $y$:
 	
 \begin{center}
-	\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
-	\clip(-4,0.5) rectangle (3,4.5);
-	\draw [line width=1.pt] (-3.,4.) circle (0.5cm);
-	\draw [line width=1.pt] (-3.,2.5) circle (0.5cm);
-	\draw [line width=1.pt] (-3.,1.) circle (0.5cm);
-	\draw [line width=1.pt] (-1.,3.)-- (-1.,2.);
-	\draw [line width=1.pt] (-1.,2.)-- (1.5,2.);
-	\draw [line width=1.pt] (1.5,2.)-- (1.5,3.);
-	\draw [line width=1.pt] (1.5,3.)-- (-1.,3.);
-	\draw [->,line width=1.pt] (-2.5,4.) -- (-1.0315953503775401,2.702352315488771);
-	\draw [->,line width=1.pt] (-2.5,2.5) -- (-1.,2.5);
-	\draw [->,line width=1.pt] (-2.5,1.) -- (-1.,2.2833448312560893);
-	\draw [->,line width=1.pt] (1.5,2.5) -- (2.5,2.5);
-	\draw (-3.3,4.25) node[anchor=north west] {$1$};
-	\draw (-3.3,2.7) node[anchor=north west] {$x_1$};
-	\draw (-3.3,1.26) node[anchor=north west] {$x_2$};
-	\draw (-0.2, 2.8) node[anchor=north west] {$f(z)$};
-	\draw (2.6747622271028213,2.745742538897389) node[anchor=north west] {$y$};
-	\draw (-2.1, 4) node[anchor=north west] {$w_1$};
-	\draw (-2.25,3) node[anchor=north west] {$w_2$};
-	\draw (-2.4,2.1) node[anchor=north west] {$w_3$};
-	\end{tikzpicture}
+	\begin{tabular}{c|c|c|c}
+    	$x_1$ & $x_2$ & $x_3$ & $y$ \\
+    	\hline 
+    	$1$ & $1$ & $2$ & $0.5$\\
+    	\hline 
+    	$1$ & $-1$ & $1$ & $0$ \\
+	\end{tabular}
 \end{center}
 
-На плоскости проведены две прямые $x_1 + x_2 = 1$ и $x_1 - x_2 = 1$. 	
-	
+\item Оказывается, что в ванной всё это время валялась куча персептронов с картинки \ref{perp3} с неизвестной функцией активации (надо самому выбирать). 
+
+\begin{minipage}{0.49\linewidth}
+\begin{figure}[H]
+\caption{} \label{perp3}
+\begin{center}
+\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+\clip(-4,0) rectangle (3,4.5);
+\draw [line width=1.pt] (-3,4) circle (0.5cm) node {$1$};
+\draw [line width=1.pt] (-3,2.5) circle (0.5cm) node {$x_1$};
+\draw [line width=1.pt] (-3,1) circle (0.5cm) node {$x_2$};
+
+\draw [line width=1.pt] (-1,3)--(-1,2)--(1.5,2)--(1.5,3)--cycle;
+\draw (0.3,2.5) node {$f(h)$};
+
+\draw [->, line width=1.pt] (-2.5,4)--(-1.1,2.7) node[pos=0.5,above] {\small $w_1$};
+\draw [->, line width=1.pt] (-2.5,2.5)--(-1.1,2.5) node[pos=0.3,above] {\small $w_2$};
+\draw [->, line width=1.pt] (-2.5,1)--(-1.1,2.3) node[pos=0.5,below] {\small $w_3$};
+\draw [->, line width=1.pt] (1.5,2.5)--(2.5,2.5) node[pos=1,right] {$\hat y$};
+\end{tikzpicture}
+\end{center}
+\end{figure}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\linewidth}
+\begin{figure}[H]
+\caption{} \label{perp4}
 \begin{center}
 	\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
 	\clip(-2,-5) rectangle (4,-0.5);
-	\draw [line width=2.pt] (-3.,4.) circle (0.5cm);
-	\draw [line width=2.pt] (-3.152000366859971,1.7166134938755313) circle (0.5cm);
-	\draw [line width=2.pt] (-1.,3.)-- (-1.,2.);
-	\draw [line width=2.pt] (-1.,2.)-- (1.5,2.);
-	\draw [line width=2.pt] (1.5,2.)-- (1.5,3.);
-	\draw [line width=2.pt] (1.5,3.)-- (-1.,3.);
-	\draw [->,line width=2.pt] (-2.5,4.) -- (-1.0315953503775401,2.702352315488771);
-	\draw [->,line width=2.pt] (-2.652000366859971,1.7166134938755313) -- (-1.,2.5);
-	\draw [->,line width=2.pt] (1.5,2.5) -- (2.5,2.5);
-	\draw (-3.270567410142784,1.9563548477920916) node[anchor=north west] {$x_1$};
-	\draw (-0.17178835933248715,2.8036772444980356) node[anchor=north west] {$\max(0,t)$};
-	\draw (2.6727939724660277,2.7552588218291243) node[anchor=north west] {$y$};
-	\draw (-1.7695963074065464,3.8809871488813075) node[anchor=north west] {$w_1$};
-	\draw (-2.217466717093972,2.6342127651568465) node[anchor=north west] {$w_2$};
-	\draw (-3.088998325134368,4.2562299245653685) node[anchor=north west] {$1$};
-	\draw [->,line width=2.pt] (1.,-5.) -- (1.,-1.);
-	\draw [->,line width=2.pt] (-2.,-3.) -- (4.,-3.);
-	\draw (2.0191452664357303,-1.251365654023268) node[anchor=north west] {$1$};
-	\draw (-0.3170436273392198,-2.4134077980771345) node[anchor=north west] {$0$};
-	\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0.,-5.)-- (4.,-1.);
-	\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0.,-1.)-- (4.,-5.);
-	\draw (1.910203815430681,-4.0112157461512) node[anchor=north west] {$0$};
-	\draw (3.2417104388257303,-2.4013031924099066) node[anchor=north west] {$0$};
+	\draw [->,line width=2.pt] (1,-5) -- (1,-1);
+	\draw [->,line width=2.pt] (-2,-3) -- (4,-3);
+	\draw (2,-1.25) node[anchor=north west] {$1$};
+	\draw (-0.3,-2.4) node[anchor=north west] {$0$};
+	\draw (1.9,-4) node[anchor=north west] {$0$};
+	\draw (3.2,-2.5) node[anchor=north west] {$0$};	
+	\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0,-5)-- (4,-1);
+	\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0,-1)-- (4,-5);
 	\end{tikzpicture}
 \end{center}
+\end{figure}
+\end{minipage}
 
-Свете нужно собрать нейросетку, которая будет классифицировать объекты с плоскости так, как показано на картинке.
-\end{itemize}
+Маша провела на плоскости две прямые: $x_1 + x_2 = 1$ и $x_1 - x_2 = 1$. Она хочет собрать из персептронов нейросетку, которая будет классифицировать объекты с плоскости так, как показано на картинке \ref{perp4}.
+
+\item В коробке на кухне завалялось три персептрона, у каждого два входа с константой и пороговая функция активации. Маша хочет реализовать с их помощью функцию
+
+$$
+y = \begin{cases}
+1, \text{ если } x_2 \geq |x_1 - 3| + 2; \\
+0, \text{ иначе}
+\end{cases}.
+$$
+\end{enumerate}
 \end{problem}
 
+\begin{sol}
+\begin{enumerate}
+\item Начнём с первого пункта. Чтобы было легче запишем нейрон в виде уравнения: 
 
+$$
+\hat y = \max(0, w_1 + w_2 \cdot x_1).
+$$
+
+Нам нужно, чтобы 
+
+\begin{equation*}
+\begin{aligned}
+\max(0, w_1 + w_2 \cdot 1) = 0 \\ 
+\max(0, w_1 + w_2 \cdot 0) = 1 
+\end{aligned}
+\end{equation*}
+
+Из второго уравнения сразу получаем, что $w_1 = 1$, а $w_2$ на второе уравнение никак не влияет. Для того, чтобы в первом уравнении получить ноль, нужно взять $w_2 \le -1$. Нейрон готов. 
+
+\item Снова выписываем несколько уравнений: 
+
+\begin{equation*}
+\begin{aligned}
+\max(0, w_1 + w_2 + 2 \cdot w_3) = 0.5 \\ 
+\max(0, w_1 - w_2 + w_3) = 0 
+\end{aligned}
+\end{equation*}
+
+Тут решений может быть довольно много. Первое, что приходит в голову --- это занулить $w_1$ и $w_3$ в первом уравнении, а $w_2$ поставить $0.5$. Тогда во втором уравнении мы сразу же будем оказываться в отрицательной области и $ReLU$ заботливо будет отдавать нам $0$. 
+
+\item Давайте для разнообразия возьмём в качестве $f(h)$ пороговую функцию потерь
+
+$$
+f(h) = \begin{cases} 1, h > 0 \\ 0, h \le 0 \end{cases}.
+$$
+
+Один нейрон --- это одна линия, проведённая на плоскости. Эта линия отделяет один класс от другого. Например, линию $ x_1 + x_2 - 1 = 0 $ мог бы описать нейрон 
+
+\begin{minipage}{0.49\linewidth}
+\begin{center}
+\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+\clip(-4,0) rectangle (3.5,4.5);
+\draw [line width=1.pt] (-3,4) circle (0.5cm) node {$1$};
+\draw [line width=1.pt] (-3,2.5) circle (0.5cm) node {$x_1$};
+\draw [line width=1.pt] (-3,1) circle (0.5cm) node {$x_2$};
+
+\draw [line width=1.pt] (-1,3)--(-1,2)--(1.5,2)--(1.5,3)--cycle;
+\draw [line width=1.pt] (-0.6,2.2)--(0.2,2.2)--(0.2,2.8)--(1,2.8);
+\draw (0.3,1.7) node {$\gamma = 0$};
+
+\draw [->, line width=1.pt] (-2.5,4)--(-1.1,2.7) node[pos=0.5,above] {\small $-1$};
+\draw [->, line width=1.pt] (-2.5,2.5)--(-1.1,2.5) node[pos=0.3,above] {\small $1$};
+\draw [->, line width=1.pt] (-2.5,1)--(-1.1,2.3) node[pos=0.5,below] {\small $1$};
+\draw [->, line width=1.pt] (1.5,2.5)--(2.5,2.5) node[pos=1,right] {$h_1$};
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\linewidth}
+\begin{center}
+	\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+	\clip(0,-5) rectangle (4,-0.5);
+ 	\draw (2,-1.25) node[anchor=north west] {$1$};
+ 	\draw (0.3,-2.4) node[anchor=north west] {$0$};
+	\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0,-1)-- (4,-5);
+	\end{tikzpicture}
+\end{center}
+\end{minipage}
+
+Порог $\gamma$ для кусочной функции в каком-то смысле дублирует константу. Будем всегда брать его нулевым. Видим, что если мы получили комбинацию $x_1$, $x_2$ и $1$, большую, чем ноль, мы оказались справа от прямой. Если хочется поменять метку $0$ и $1$ сторонами, можно умножить все коэффициенты на $-1$. \indef{Наш персептрон понимает по какую сторону от прямой мы оказались,} то есть задаёт одну линейную разделяющую поверхность.  По аналогии для второй прямой мы можем получить: 
+
+\begin{minipage}{0.49\linewidth}
+\begin{center}
+\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+\clip(-4,0) rectangle (3.5,4.5);
+\draw [line width=1.pt] (-3,4) circle (0.5cm) node {$1$};
+\draw [line width=1.pt] (-3,2.5) circle (0.5cm) node {$x_1$};
+\draw [line width=1.pt] (-3,1) circle (0.5cm) node {$x_2$};
+
+\draw [line width=1.pt] (-1,3)--(-1,2)--(1.5,2)--(1.5,3)--cycle;
+\draw [line width=1.pt] (-0.6,2.2)--(0.2,2.2)--(0.2,2.8)--(1,2.8);
+\draw (0.3,1.7) node {$\gamma = 0$};
+
+\draw [->, line width=1.pt] (-2.5,4)--(-1.1,2.7) node[pos=0.5,above] {\small $1$};
+\draw [->, line width=1.pt] (-2.5,2.5)--(-1.1,2.5) node[pos=0.3,above] {\small $-1$};
+\draw [->, line width=1.pt] (-2.5,1)--(-1.1,2.3) node[pos=0.5,below] {\small $1$};
+\draw [->, line width=1.pt] (1.5,2.5)--(2.5,2.5) node[pos=1,right] {$h_2$};
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\linewidth}
+\begin{center}
+	\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+	\clip(0,-5) rectangle (4,-0.5);
+ 	\draw (2,-1.25) node[anchor=north west] {$1$};
+ 	\draw (1.9,-4) node[anchor=north west] {$0$};
+ 	\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0,-5)-- (4,-1);
+	\end{tikzpicture}
+\end{center}
+\end{minipage}
+
+Итак, первый персептрон выбрал нам позицию относительно первой прямой, второй относительно второй. Остаётся только соединить эти результаты в один. Нейрон для скрепки должен реализовать для нас логическую функцию, которую задаёт табличка ниже. Там же нарисованы примеры весов, которые могли бы объединить выхлоп первого слоя в итоговый прогноз.
+
+\begin{minipage}{0.1\linewidth}
+\begin{center}
+\begin{tabular}{c|c|c}
+	$h_1$ & $h_2$ & $\hat y$ \\
+	\hline 
+	$1$ & $1$ & {\color{green} $1$} \\
+	\hline 
+	$1$ & $0$ & {\color{green} $0$} \\
+	\hline 
+	$0$ & $1$ & {\color{green} $0$} \\
+	\hline 
+	$0$ & $0$ & {\color{green} $0$} \\
+\end{tabular}
+\end{center}
+\end{minipage}
+\hfill
+\begin{minipage}{0.44\linewidth}
+\begin{center}
+	\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+	\clip(-2,-5) rectangle (4,-0.5);
+	
+	\draw (2,-1.9) node[anchor=north west] {\color{green} $1$};
+	\draw (1.6,-1.1) node[anchor=north west] {$(1, 1)$};
+	
+	\draw (-0.3,-2.2) node[anchor=north west] {\color{green} $0$};
+	\draw (-0.7,-3) node[anchor=north west] {$(0, 1)$};
+	
+	\draw (1.9,-3.5) node[anchor=north west] {\color{green} $0$};
+	\draw (1.5,-4.2) node[anchor=north west] {$(0, 0)$};
+	
+	\draw (3.2,-2.2) node[anchor=north west] {\color{green} $0$};	
+	\draw (2.9,-2.8) node[anchor=north west] {$(1, 0)$};	
+	
+	\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0,-5)-- (4,-1);
+	\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0,-1)-- (4,-5);
+	\end{tikzpicture}
+\end{center}
+\end{minipage}
+\hfill
+\begin{minipage}{0.44\linewidth}
+\begin{center}
+\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+\clip(-4,0) rectangle (3,4.5);
+\draw [line width=1.pt] (-3,4) circle (0.5cm) node {$1$};
+\draw [line width=1.pt] (-3,2.5) circle (0.5cm) node {$h_1$};
+\draw [line width=1.pt] (-3,1) circle (0.5cm) node {$h_2$};
+
+\draw [line width=1.pt] (-1,3)--(-1,2)--(1.5,2)--(1.5,3)--cycle;
+\draw [line width=1.pt] (-0.6,2.2)--(0.2,2.2)--(0.2,2.8)--(1,2.8);
+\draw (0.3,1.7) node {$\gamma = 0$};
+
+\draw [->, line width=1.pt] (-2.5,4)--(-1.1,2.7) node[pos=0.5,above] {\small $-1$};
+\draw [->, line width=1.pt] (-2.5,2.5)--(-1.1,2.5) node[pos=0.3,above] {\small $1$};
+\draw [->, line width=1.pt] (-2.5,1)--(-1.1,2.3) node[pos=0.5,below] {\small $1$};
+\draw [->, line width=1.pt] (1.5,2.5)--(2.5,2.5) node[pos=1,right] {$\hat y$};
+\end{tikzpicture}
+\end{center}
+\end{minipage}
+
+Теперь мы можем нарисовать итоговую нейронную сеть, решающую задачу Маши. Она состоит из двух слоёв. Меньше не выйдет, так как каждый персептрон строит только одну разделяющую линию. 
+
+\begin{center}
+\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+
+\draw [line width=1.pt] (-3,1.5) circle (0.5cm) node {$1$};
+\draw [line width=1.pt] (-3,-0.5) circle (0.5cm) node {$x_1$};
+\draw [line width=1.pt] (-3,-2.5) circle (0.5cm) node {$x_2$};	
+
+\draw [line width=1.pt] (-1,0)--(1,0)--(1,1)--(-1,1)--cycle;
+\draw [line width=1.pt] (-0.7,0.2)--(0,0.2)--(0,0.8)--(0.7,0.8);
+\draw (0,-0.2) node {$\gamma = 0$};
+
+\draw [line width=1.pt] (-1,-2)--(1,-2)--(1,-1)--(-1,-1)--cycle;
+\draw [line width=1.pt] (-0.7,-1.8)--(0,-1.8)--(0,-1.2)--(0.7,-1.2);
+\draw (0,-2.2) node {$\gamma = 0$};
+
+\draw [line width=1.pt] (3,1.5) circle (0.5cm) node {$1$};	
+\draw [line width=1.pt] (2,-1)--(4,-1)--(4,0)--(2,0)--cycle;
+\draw [line width=1.pt] (2.3,-0.8)--(3,-0.8)--(3,-0.2)--(3.7,-0.2);
+\draw (3,-1.2) node {$\gamma = 0$};
+
+\draw [line width=1.pt] (-2.5,1.5) -- (-1,0.5) node[pos=0.5,above] {\small $-1$};
+\draw [line width=1.pt] (-2.5,1.5) -- (-1,-1.5) node[pos=0.3,left] {\small $1$};
+\draw [line width=1.pt] (-2.5,-0.5) -- (-1,0.5) node[pos=0.5,left] {\small $1$};
+\draw [line width=1.pt] (-2.5,-0.5) -- (-1,-1.5)  node[pos=0.5,left] {\small  $-1$};
+\draw [line width=1.pt] (-2.5,-2.5) -- (-1,0.5) node[near start,left] {\small $1$};
+\draw [line width=1.pt] (-2.5,-2.5) -- (-1,-1.5)  node[near start,below] {\small  $1$};
+
+\draw [line width=1.pt] (1,0.5) -- (2,-0.5) node[pos=0.25,right] {\small $1$};
+\draw [line width=1.pt] (1,-1.5) -- (2,-0.5) node[pos=0.2,right] {\small $1$};
+\draw [line width=1.pt] (3,1) -- (3,0) node[pos=0.5,right] {\small  $-1$};
+
+\draw [->] (4,-0.5) -- (5,-0.5) node[right] {$\hat y$};
+\end{tikzpicture}
+\end{center}
+
+Кстати говоря, если бы мы ввели для нашей нейросетки дополнительный признак $x_1 \cdot x_2$, у нас бы получилось обойтись только одним персептроном. В нашей ситуации \indef{нейросетка сама сварила на первом слое признак $x_1 \cdot x_2$, которого ей не хватало.} 
+
+\item  \todo[inline]{Вбить решение}
+\end{enumerate}
+\end{sol}
+
+
+%%%-------------------------------------------
 \begin{problem}{(Логические функции)}
 Есть теорема, которая говорит о том, что с помощью нейросетки можно аппроксимировать почти любую функцию. Попробуйте с помощью нейросеток с минимально возможным числом нейронов описать логический функции, заданные следующими таблицами истинности:
 
 \begin{center}
 \begin{minipage}{0.3\linewidth} 
-	\begin{tabular}{c|c|c}
+\begin{tabular}{c|c|c}
 	$x_1$ & $x_2$ & $x_1 \cap x_2$ \\
 	\hline 
 	$1$ & $1$ & $1$ \\
@@ -458,98 +812,148 @@ y = \max(0, 4 \cdot \max(0, 3x_1 + 4x_2 + 1) + 2 \cdot \max(0, 3x_1 + 2x_2 + 7) 
 \end{problem}
 
 
-\begin{problem}{(Минималочка)}
-Сколько минимально нейронов необходимо для решения следующих двух задач классификации?  Сколько слоёв минимально должно быть в нейросетке?  Почему?  
+%%%-------------------------------------------
+\begin{problem}{(Ещё немного про XoR)} 
+Маша заметила, что на XoR ушло очень много персептронов. Она поняла, что первые два персептрона пытаются сварить для третьего нелинейные признаки, которых нейросетке не хватает. Она решила самостоятельно добавить персептрону вход $x_3 - x_1 \cdot x_2$ и реализовать XoR одним персептроном. Можно ли это сделать? 
+\end{problem}
 
+%%%-------------------------------------------
+\begin{problem}{(Универсальный классификатор)}
+Маша задумалась о том, можно ли с помощью нейронной сетки с одним скрытым слоем решить абсолютно любую задачу классификации на два класса со сколь угодно большой точностью? Ей кажется, что да. Как это можно сделать? 
+\end{problem} 
+
+
+%%%-------------------------------------------
+\begin{problem}{(Избыток)}
+На сайте \url{http://playground.tensorflow.org} Маша стала играться с простенькими нейросетками и  обучила для решения задачи классификации трёхслойного монстра.
+
+\begin{center} 
+\includegraphics[scale=0.17]{tensorflow_demo.png}
+\end{center} 
+
+Голубым цветом обозначен первый класс, рыжим второй. Внутри каждого нейрона визуализирована та разделяющая поверхность, которую он выстраивает. Так, первый слой ищет разделяющую линию. Второй слой пытается из этих линий выстроить более сложные фигуры и так далее. Чем ярче связь между нейронами, тем больше весовой коэффициент, относящейся к ней. Синие связи --- положительные, рыжие --- отрицательные. Чем тусклее связь, тем он ближе к нулю. 
+
+Маша заметила, что с её получившейся архитектурой что-то не так. Какие проблемы вы в ней видите?
+\end{problem} 
+
+\begin{sol}
+Нейросетка Маши оказалась избыточной. Во-первых, можно увидеть, что на первом слое есть нейрон, который вообще ничего не делает. Связи, которые идут к нему от входов настолько тусклые (коэффициенты при них равны нулю), что их даже не видно на картинке. От этого нейрона смело можно избавиться и сделать архитектуру проще. 
+
+Во-вторых, можно заметить, что на последнем слое у нас есть два одинаковых нейрона. Один из них смело можно выбрасывать. 
+
+\begin{center} 
+\includegraphics[scale=0.17]{tensorflow_demo2.png}
+\end{center} 
+
+
+Для решения такой простой задачи классификации подойдёт более простая модель. Сколько минимально нужно нейронов, чтобы её решить вам и Маше предстоит выяснить в следующей задачке. 
+\end{sol}
+
+
+%%%-------------------------------------------
+\begin{problem}{(Минималочка)}
+Сколько минимально нейронов необходимо для решения следующих задач классификации?  Сколько слоёв минимально должно быть в нейросетке?  Почему?  
+
+\begin{minipage}{0.3\linewidth} 
 \begin{center}
-	\definecolor{qqqqff}{rgb}{0.,0.,1.}
-	\definecolor{qqwuqq}{rgb}{0.,0.39215686274509803,0.}
-	\begin{tikzpicture}[scale = 0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
-	\clip(-5.5,1) rectangle (9,7);
-	\draw [line width=2.pt] (1.,7.)-- (1.02,1.8);
-	\begin{scriptsize}
-	\draw [fill=qqwuqq] (-2.6,4.9) circle (2.5pt);
-	\draw [fill=qqwuqq] (-2.,4.) circle (2.5pt);
-	\draw [fill=qqwuqq] (-1.42,4.9) circle (2.5pt);
-	\draw [fill=qqqqff] (-0.44,5.84) circle (2.5pt);
-	\draw [fill=qqqqff] (-1.52,5.9) circle (2.5pt);
-	\draw [fill=qqqqff] (-3.,6.) circle (2.5pt);
-	\draw [fill=qqqqff] (-4.02,5.7) circle (2.5pt);
-	\draw [fill=qqqqff] (-3.36,4.28) circle (2.5pt);
-	\draw [fill=qqqqff] (-2.4,2.92) circle (2.5pt);
-	\draw [fill=qqqqff] (-1.18,3.38) circle (2.5pt);
-	\draw [fill=qqqqff] (-0.56,4.16) circle (2.5pt);
-	\draw [fill=qqqqff] (0.,5.) circle (2.5pt);
-	\draw [fill=qqqqff] (-3.52,3.32) circle (2.5pt);
-	\draw [fill=qqqqff] (-0.44,2.5) circle (2.5pt);
-	\draw [fill=qqqqff] (-1.44,2.78) circle (2.5pt);
-	\draw [fill=qqqqff] (0.06,6.38) circle (2.5pt);
-	\draw [fill=qqqqff] (-2.96,6.78) circle (2.5pt);
-	\draw [fill=qqqqff] (-4.02,4.56) circle (2.5pt);
-	\draw [fill=qqwuqq] (-2.06,4.62) circle (2.5pt);
-	\draw [fill=qqwuqq] (-2.,5.) circle (2.5pt);
-	\draw [fill=qqwuqq] (-1.72,4.4) circle (2.5pt);
-	\draw [fill=qqwuqq] (-2.46,4.42) circle (2.5pt);
-	\draw [fill=qqqqff] (-2.22,6.26) circle (2.5pt);
-	\draw [fill=qqqqff] (1.84,5.84) circle (2.5pt);
-	\draw [fill=qqqqff] (1.84,4.86) circle (2.5pt);
-	\draw [fill=qqqqff] (1.84,3.62) circle (2.5pt);
-	\draw [fill=qqqqff] (1.84,2.62) circle (2.5pt);
-	\draw [fill=qqqqff] (2.68,2.56) circle (2.5pt);
-	\draw [fill=qqqqff] (2.68,3.38) circle (2.5pt);
-	\draw [fill=qqqqff] (2.54,4.5) circle (2.5pt);
-	\draw [fill=qqqqff] (2.64,5.72) circle (2.5pt);
-	\draw [fill=qqqqff] (5.04,5.6) circle (2.5pt);
-	\draw [fill=qqqqff] (5.,4.56) circle (2.5pt);
-	\draw [fill=qqqqff] (4.92,3.36) circle (2.5pt);
-	\draw [fill=qqqqff] (4.92,2.48) circle (2.5pt);
-	\draw [fill=qqqqff] (5.98,2.32) circle (2.5pt);
-	\draw [fill=qqqqff] (5.98,3.16) circle (2.5pt);
-	\draw [fill=qqqqff] (6.,4.) circle (2.5pt);
-	\draw [fill=qqqqff] (5.94,4.76) circle (2.5pt);
-	\draw [fill=qqqqff] (5.92,5.34) circle (2.5pt);
-	\draw [fill=qqwuqq] (3.42,5.12) circle (2.5pt);
-	\draw [fill=qqwuqq] (3.44,5.94) circle (2.5pt);
-	\draw [fill=qqwuqq] (4.28,5.8) circle (2.5pt);
-	\draw [fill=qqwuqq] (4.28,5.3) circle (2.5pt);
-	\draw [fill=qqwuqq] (3.54,3.98) circle (2.5pt);
-	\draw [fill=qqwuqq] (4.,4.) circle (2.5pt);
-	\draw [fill=qqwuqq] (3.5,2.98) circle (2.5pt);
-	\draw [fill=qqwuqq] (4.18,2.94) circle (2.5pt);
-	\draw [fill=qqwuqq] (3.4,2.32) circle (2.5pt);
-	\draw [fill=qqwuqq] (4.18,2.36) circle (2.5pt);
-	\draw [fill=qqwuqq] (3.98,4.56) circle (2.5pt);
-	\end{scriptsize}
-	\end{tikzpicture}
-\end{center}
+\begin{tikzpicture}[scale = 0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
+	\draw [fill=red] (-2.6,4.9) circle (2.5pt);
+	\draw [fill=red] (-2.,4.) circle (2.5pt);
+	\draw [fill=red] (-1.42,4.9) circle (2.5pt);
+	\draw [fill=blue] (-0.44,5.84) circle (2.5pt);
+	\draw [fill=blue] (-1.52,5.9) circle (2.5pt);
+	\draw [fill=blue] (-3.,6.) circle (2.5pt);
+	\draw [fill=blue] (-4.02,5.7) circle (2.5pt);
+	\draw [fill=blue] (-3.36,4.28) circle (2.5pt);
+	\draw [fill=blue] (-2.4,2.92) circle (2.5pt);
+	\draw [fill=blue] (-1.18,3.38) circle (2.5pt);
+	\draw [fill=blue] (-0.56,4.16) circle (2.5pt);
+	\draw [fill=blue] (0.,5.) circle (2.5pt);
+	\draw [fill=blue] (-3.52,3.32) circle (2.5pt);
+	\draw [fill=blue] (-0.44,2.5) circle (2.5pt);
+	\draw [fill=blue] (-1.44,2.78) circle (2.5pt);
+	\draw [fill=blue] (0.06,6.38) circle (2.5pt);
+	\draw [fill=blue] (-2.96,6.78) circle (2.5pt);
+	\draw [fill=blue] (-4.02,4.56) circle (2.5pt);
+	\draw [fill=red] (-2.06,4.62) circle (2.5pt);
+	\draw [fill=red] (-2.,5.) circle (2.5pt);
+	\draw [fill=red] (-1.72,4.4) circle (2.5pt);
+	\draw [fill=red] (-2.46,4.42) circle (2.5pt);
+	\draw [fill=blue] (-2.22,6.26) circle (2.5pt);
+\end{tikzpicture}
+\end{center} 
+\end{minipage} 
+\hfill
+\begin{minipage}{0.3\linewidth} 
+\begin{center}
+\begin{tikzpicture}[scale = 0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
+	\draw [fill=blue] (1.84,5.84) circle (2.5pt);
+	\draw [fill=blue] (1.84,4.86) circle (2.5pt);
+	\draw [fill=blue] (1.84,3.62) circle (2.5pt);
+	\draw [fill=blue] (1.84,2.62) circle (2.5pt);
+	\draw [fill=blue] (2.68,2.56) circle (2.5pt);
+	\draw [fill=blue] (2.68,3.38) circle (2.5pt);
+	\draw [fill=blue] (2.54,4.5) circle (2.5pt);
+	\draw [fill=blue] (2.64,5.72) circle (2.5pt);
+	\draw [fill=blue] (5.04,5.6) circle (2.5pt);
+	\draw [fill=blue] (5.,4.56) circle (2.5pt);
+	\draw [fill=blue] (4.92,3.36) circle (2.5pt);
+	\draw [fill=blue] (4.92,2.48) circle (2.5pt);
+	\draw [fill=blue] (5.98,2.32) circle (2.5pt);
+	\draw [fill=blue] (5.98,3.16) circle (2.5pt);
+	\draw [fill=blue] (6.,4.) circle (2.5pt);
+	\draw [fill=blue] (5.94,4.76) circle (2.5pt);
+	\draw [fill=blue] (5.92,5.34) circle (2.5pt);
+	\draw [fill=red] (3.42,5.12) circle (2.5pt);
+	\draw [fill=red] (3.44,5.94) circle (2.5pt);
+	\draw [fill=red] (4.28,5.8) circle (2.5pt);
+	\draw [fill=red] (4.28,5.3) circle (2.5pt);
+	\draw [fill=red] (3.54,3.98) circle (2.5pt);
+	\draw [fill=red] (4.,4.) circle (2.5pt);
+	\draw [fill=red] (3.5,2.98) circle (2.5pt);
+	\draw [fill=red] (4.18,2.94) circle (2.5pt);
+	\draw [fill=red] (3.4,2.32) circle (2.5pt);
+	\draw [fill=red] (4.18,2.36) circle (2.5pt);
+	\draw [fill=red] (3.98,4.56) circle (2.5pt);
+\end{tikzpicture}
+\end{center} 
+\end{minipage} 
+
 \todo[inline]{Добавить норм ксор для точек как на семе} 
 \end{problem}
 
 
-\begin{problem}{(Универсальный апроксиматор)}
+%%%-------------------------------------------
+\begin{problem}{(Универсальный регрессор)}
 Доказать, что с помощью однослойной нейронной сетки можно приблизить любую непрерывную функцию от одного аргумента $f(x)$ со сколь угодно большой точностью\footnote{\url{http://neuralnetworksanddeeplearning.com/chap4.html}}.  
 
 \textbf{Hint:}  Вспомните, что любую непрерывную функцию можно приблизить с помощью кусочно-линейной функции (ступеньки). Осознайте как с помощью пары нейронов можно описать такую ступеньку. Соедините все ступеньки в сумму с помощью выходного нейрона. 
-
-\todo[inline]{То же самое про классификацию} 
 \end{problem}
 
-\todo[inline]{ещё задачи на апроксимации от ББ - ???}
 
 
 \section{50 оттенков градиентного спуска}
 
+%\epigraph{ }{ }
+
+%%%-------------------------------------------
+
 
 \section{Backpropagation}
 
+%\epigraph{ }{ }
+
 Что происходит, когда мы суём пальцы в розетку? Нас бьёт током! Мы делаем ошибку, и она распространяется по нашему телу назад. 
 
-\begin{problem}
+
+%%%-------------------------------------------
+\begin{problem}{(Граф вычислений)}
 	Изобразите для функции  $f(x,y) = x^2 + xy + (x + y)^2$ граф вычислений. Найдите производные всех выходов по всем входам. Опираясь на граф выпишите частные производные функции $f$.\footnote{По мотивам книги Николенко "Глубокое обучение" (стр. 79)}
 \end{problem} 
 
 
-\begin{problem}
+%%%-------------------------------------------
+\begin{problem}{(Придумываем Backpropagation)}
 	Дана нейросетка: 
 \begin{center}
 	\begin{tikzpicture}[line cap=round,line join=roundx=1.0cm,y=1.0cm]
@@ -617,7 +1021,9 @@ y = \max(0, 4 \cdot \max(0, 3x_1 + 4x_2 + 1) + 2 \cdot \max(0, 3x_1 + 2x_2 + 7) 
 	\end{enumerate}
 \end{problem}
 
-\begin{problem}
+
+%%%-------------------------------------------
+\begin{problem}{(Backpropagation руками)}
 	Как-то раз Вовочка решал задачу классификации. С тех пор у него в кармане завалялась нейросеть: 
 	\begin{center}
 		\begin{tikzpicture}[scale = 1.5, line cap=round,line join=round,x=1.0cm,y=1.0cm]
@@ -650,7 +1056,8 @@ y = \max(0, 4 \cdot \max(0, 3x_1 + 4x_2 + 1) + 2 \cdot \max(0, 3x_1 + 2x_2 + 7) 
 \end{problem}
 
 
-\begin{problem}
+%%%-------------------------------------------
+\begin{problem}{(И ещё один Backpropagation)}
 	Пусть у нас есть нейронка: 
 	
 	$$ 
@@ -706,6 +1113,8 @@ y = \max(0, 4 \cdot \max(0, 3x_1 + 4x_2 + 1) + 2 \cdot \max(0, 3x_1 + 2x_2 + 7) 
 
 \section{Активация} 
 
+%\epigraph{ }{ }
+
 \todo[inline]{Сюда перекинуть всё из task2}
 
 \begin{problem}
@@ -724,6 +1133,8 @@ y = \max(0, 4 \cdot \max(0, 3x_1 + 4x_2 + 1) + 2 \cdot \max(0, 3x_1 + 2x_2 + 7) 
 
 
 \section{Регуляризаторы}
+
+%\epigraph{ }{ }
 
 % \begin{problem}
 % 	Маша услышала про машин лёрнинг и решила, что они и есть та самая Маша, которой этот лёрнинг принадлежит. Теперь она собирается обучить нейронную сеть для решения задачи регрессии, На вход в неё идёт $12$ переменных, в сетке есть $3$ скрытых слоя. В пером слое $300$ нейронов, во втором $200$, в третьем $100$. 
@@ -775,8 +1186,11 @@ y = \max(0, 4 \cdot \max(0, 3x_1 + 4x_2 + 1) + 2 \cdot \max(0, 3x_1 + 2x_2 + 7) 
 
 \section{Всего лишь кубики LEGO} 
 
+%\epigraph{ }{ }
+
 % сюда tasks6, LSTM, w2v и тп
 
+% упражнение про разные модные виды ячеек типа резнетов и тп
 
 \end{document}
 
