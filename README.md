@@ -4,4 +4,5 @@
 
 __Следущие обновления:__  Первая глава в течение января
 
-__Текущая версия книги:__ 
+* [Текущая версия книги без ответов](https://github.com/FUlyankin/neural_nets_prob/blob/master/main_19.01.20.pdf)
+* [Текущая версия книги с решениями](https://github.com/FUlyankin/neural_nets_prob/blob/master/main_19.01.20_ans.pdf)
