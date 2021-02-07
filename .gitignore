@@ -11,9 +11,4 @@
 .Rhistory
 .DS_Store
 *.ipynb_checkpoints
-new_hw/
-nda/
-*solving.ipynb
-*solve.ipynb
-*solve.pdf
 secret_token.txt
