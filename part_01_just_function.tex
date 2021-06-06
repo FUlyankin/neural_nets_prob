@@ -20,7 +20,7 @@
 \end{tikzpicture}
 \end{center}
 
-Хозяин кофейни, Добродум, объяснил Маше, что это Покрас-Лампас так нарисовал линейную регрессию,\footnote{экслюзивный заказ был} и её легко можно переписать в виде формулы: $y_i = w_0 + w_1 \cdot x_i.$ Пока Добродум готовил кофе, Маша накидала у себя на бумажке новую картинку: 
+Хозяин кофейни, Добродум, объяснил Маше, что это Покрас-Лампас так нарисовал линейную регрессию, и её легко можно переписать в виде формулы: $y_i = w_0 + w_1 \cdot x_i.$ Пока Добродум готовил кофе, Маша накидала у себя на бумажке новую картинку: 
 
 \begin{center}
 \begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
@@ -44,18 +44,13 @@
 \end{tikzpicture}
 \end{center}
 
-\begin{enumerate} 
-\item Как такая функция будет выглядеть в виде формулы? 
-\item Правда ли, что $y$ будет нелинейно зависеть от $x$?
-\item Если нет, как это исправить и сделать зависимость нелинейной? 
-% \item Запишите для трёх наблюдений в матричной форме сначала регрессию, а потом новую функцию Маши. 
-\end{enumerate} 
+Как такая функция будет выглядеть в виде формулы? Правда ли, что $y$ будет нелинейно зависеть от $x$? Если нет, как это исправить и сделать зависимость нелинейной? 
 \end{problem}
 
-\begin{sol}
-Когда мы переписывали картинку в виде уравнения регрессии, мы брали вход из кругляшей, умножали его на веса, написанные около стрелок и искали сумму. 
+\newpage
 
-Сделаем ровно то же самое для Машиной картинки. Буквы $h$ внутри кругляшей скрытого слоя будут считаться как: 
+\begin{sol}
+Когда мы переписывали картинку в виде уравнения регрессии, мы брали вход из кругляшей, умножали его на веса, написанные около стрелок и искали сумму. Сделаем ровно то же самое для Машиной картинки. Величины $h_i$ внутри кругляшей скрытого слоя будут считаться как: 
 
 \begin{equation*}
     \begin{aligned} 
@@ -64,21 +59,19 @@
     \end{aligned} 
 \end{equation*}
 
-Итоговый $y$ будет складываться из ашек: 
+Итоговый $y$ будет получаться из этих промежуточных величин как 
 
 $$
 y = w_1 \cdot h_1 + w_2 \cdot h_2.
 $$
 
-Раскрываем $h$-ки и получаем для $y$ итоговое уравнение: 
+Подставим вместо $h_i$ их выражение через $x$ и получим уравнение, которое описывает картинку Маши
 
 \begin{multline*} 
-y = w_1 \cdot h_1 + w_2 \cdot h_2 = \\ = w_1 \cdot (w_{11} + w_{21} \cdot x)  + w_2 \cdot (w_{12} + w_{22} \cdot x)  = \\ = \underbrace{(w_1 w_{11} + w_2 w_{12})}_{\gamma_1} + \underbrace{(w_1 w_{21} + w_2 w_{22})}_{\gamma_2} \cdot x 
+y = w_1 \cdot h_1 + w_2 \cdot h_2 = \\ = w_1 \cdot (w_{11} + w_{21} \cdot x)  + w_2 \cdot (w_{12} + w_{22} \cdot x)  = \\ = \underbrace{(w_1 w_{11} + w_2 w_{12})}_{\gamma_1} + \underbrace{(w_1 w_{21} + w_2 w_{22})}_{\gamma_2} \cdot x.
 \end{multline*} 
 
-Когда мы раскрыли скобки, мы получили ровно ту же самую линейную регрессию. Правда мы зачем-то довольно сложно параметризовали $\gamma_1$ и $\gamma_2$ через шесть параметров.
-
-Чтобы сделать зависимость нелинейной, нужно немного преобразить каждую из $h_i$, взяв от них какую-нибудь нелинейную функцию. Например, сигмоиду: 
+Когда мы раскрыли скобки, мы получили ровно ту же самую линейную регрессию. Правда мы зачем-то довольно сложно параметризовали $\gamma_1$ и $\gamma_2$ через шесть параметров. Чтобы сделать зависимость нелинейной, нужно немного преобразить каждую из $h_i$, взяв от них какую-нибудь нелинейную функцию. Например, сигмоиду: 
 
 $$
 f(h) = \frac{1}{1 + e^{-h}}.
@@ -90,15 +83,10 @@ $$
 y = w_1 \cdot f(w_{11} + w_{21} \cdot x)  + w_2 \cdot f(w_{12} + w_{22} \cdot x).
 $$
 
-\sout{Смерти} Линейности больше нет. \indef{Только что на ваших глазах произошло чудо. Регрессия превратилась в нейросеть.} Можно использовать вместо сигмоиды любую другую функцию. Например, 
-
-$$
-ReLU(h) = \max(0, h).
-$$
-
-Она называется релу.\footnote{внезапное название} Она простая и обычно для нелинейности её хватает. Но об этом поговорим позже. 
+\sout{Смерти} Линейности больше нет. \indef{Только что на ваших глазах произошло чудо. Регрессия превратилась в нейросеть.} Можно использовать вместо сигмоиды любую другую функцию активации. Например, ReLU (Rectified Linear Unit) $$ReLU(h) = \max(0, h).$$
 \end{sol} 
 
+\newpage
 
 %%%-------------------------------------------
 \begin{problem}{(из картинки в формулу)}
@@ -136,7 +124,7 @@ $$
 \end{center}
 
 \begin{enumerate}
-\item В эти выходные за барной\footnote{барной... конечно, кофейня у него...} стойкой стоит Агнесса. Митинга не предвидится, температура будет в районе $20$ градусов. Сколько человек придёт в кофейню к Добродуму? 
+\item В эти выходные за барной\footnote{барной... конечно, кофейня у него...} стойкой стоит Агнесса. Митинга не предвидится, температура будет в районе $20$ градусов. Спрогнозируйте, сколько человек придёт в кофейню к Добродуму? 
 
 \item На самом деле каждая нейросетка --- это просто-напросто какая-то нелинейная сложная функция. Запишите нейросеть Добродума в виде функции.
 \end{enumerate}
@@ -209,6 +197,7 @@ $$
 Обучение нейронной сетки, на самом деле, эквивалентно обучению такой сложной нелинейной функции. 
 \end{sol}
 
+% \newpage 
 
 %%%-------------------------------------------
 \begin{problem}{(из формулы в картинку)}
@@ -218,7 +207,7 @@ $$
 y = \max(0, 4 \cdot \max(0, 3 \cdot x_1 + 4 \cdot x_2 + 1) + 2 \cdot \max(0, 3 \cdot x_1 + 2 \cdot x_2 + 7) + 6)
 \end{equation*} 
 
-Теперь она хочет, чтобы кто-нибудь из её адептов нарисовал её в виде нейросетки. Нарисуй.
+Теперь она хочет, чтобы кто-нибудь из её адептов нарисовал её в виде нейросетки. Нарисуйте.
 \end{problem}
 
 \begin{sol}
@@ -276,7 +265,7 @@ $$
 Парни очень любят Машу,\footnote{когда у тебя есть лёрнинг, они так и лезут} а Маша с недавних пор любит собирать перcептроны и думать по вечерам об их весах и функциях активации. Сегодня она решила разобрать свои залежи из перcептронов и как следует упорядочить их. 
 
 \begin{enumerate}
-\item В ящике стола Маша нашла перcептрон с картинки \ref{perp1} Маша хочет подобрать веса так, чтобы он реализовывал логическое отрицание, то есть превращал $x_1 = 0$ в $y=1$, а $x_1 = 1$ в $y=0$ (так работает логичская функция: отрицание). 
+\item В ящике стола Маша нашла перcептрон с картинки \ref{perp1} Маша хочет подобрать веса так, чтобы он реализовывал логическое отрицание, то есть превращал $x_1 = 0$ в $y=1$, а $x_1 = 1$ в $y=0$. 
 
 \begin{minipage}{0.49\linewidth}
 \begin{figure}[H]
@@ -332,7 +321,7 @@ $$
 	\end{tabular}
 \end{center}
 
-\item Оказывается, что в ванной всё это время валялась куча персептронов с картинки \ref{perp3} с неизвестной функцией активации (надо самому выбирать). 
+\item Оказывается, что в ванной всё это время валялась куча персептронов с картинки \ref{perp3} с неизвестной функцией активации.
 
 \begin{minipage}{0.49\linewidth}
 \begin{figure}[H]
@@ -375,27 +364,12 @@ $$
 \end{figure}
 \end{minipage}
 
-Маша провела на плоскости две прямые: $x_1 + x_2 = 1$ и $x_1 - x_2 = 1$. Она хочет собрать из персептронов нейросетку, которая будет классифицировать объекты с плоскости так, как показано на картинке \ref{perp4}.
-
-%%%% Дублирует предыдущий пункт :( 
-% \item В коробке на кухне завалялось три персептрона, у каждого два входа с константой и пороговая функция активации:
-
-% \begin{equation*} 
-% f(h) = \begin{cases} 1, h \ge 0 \\ 0, h < 0.\end{cases}
-% \end{equation*} 
-
-% Маша хочет реализовать с их помощью функцию
-
-% $$
-% y = \begin{cases}
-% 1, \text{ если } x_2 \geq |x_1 - 3| + 2; \\
-% 0, \text{ иначе}
-% \end{cases}.
-% $$
+Маша провела на плоскости две прямые: $x_1 + x_2 = 1$ и $x_1 - x_2 = 1$. Она хочет собрать из персептронов нейросетку, которая будет классифицировать объекты с плоскости так, как показано на картинке \ref{perp4}. В качестве функции возьмите единичную ступеньку (Функцию Хевисайда). 
 \end{enumerate}
 \end{problem}
 
 \begin{sol}
+\vspace{-1.2cm} 
 \begin{enumerate}
 \item Начнём с первого пункта. Чтобы было легче запишем нейрон в виде уравнения: 
 
@@ -412,7 +386,7 @@ $$
 \end{aligned}
 \end{equation*}
 
-Из второго уравнения сразу получаем, что $w_1 = 1$, а $w_2$ на второе уравнение никак не влияет. Для того, чтобы в первом уравнении получить ноль, нужно взять $w_2 \le -1$. Нейрон готов. 
+На второе уравнение $w_2$ никак не влияет, а $w_1 = 1.$ Для того, чтобы в первом уравнении получить ноль, нужно взять любое $w_2 \le -1$. Нейрон готов. 
 
 \item Снова выписываем несколько уравнений: 
 
@@ -423,9 +397,9 @@ $$
 \end{aligned}
 \end{equation*}
 
-Тут решений может быть довольно много. Первое, что приходит в голову --- это занулить $w_1$ и $w_3$ в первом уравнении, а $w_2$ поставить $0.5$. Тогда во втором уравнении мы сразу же будем оказываться в отрицательной области и $ReLU$ заботливо будет отдавать нам $0$. 
+Тут решений может быть довольно много. Одно из них --- это занулить $w_1$ и $w_3$ в первом уравнении, а $w_2$ поставить $0.5$. Тогда во втором уравнении мы сразу же будем оказываться в отрицательной области и $ReLU$ заботливо будет отдавать нам $0$. 
 
-\item Давайте для разнообразия возьмём в качестве $f(h)$ пороговую функцию потерь
+\item Единичная ступенька выглядит как
 
 $$
 f(h) = \begin{cases} 1, h > 0 \\ 0, h \le 0 \end{cases}.
@@ -464,7 +438,7 @@ $$
 \end{center}
 \end{minipage}
 
-Порог $\gamma$ для кусочной функции в каком-то смысле дублирует константу. Будем всегда брать его нулевым. Видим, что если мы получили комбинацию $x_1$, $x_2$ и $1$, большую, чем ноль, мы оказались справа от прямой. Если хочется поменять метку $0$ и $1$ сторонами, можно умножить все коэффициенты на $-1$. \indef{Наш персептрон понимает по какую сторону от прямой мы оказались,} то есть задаёт одну линейную разделяющую поверхность.  По аналогии для второй прямой мы можем получить: 
+Порог $\gamma$ для кусочной функции в каком-то смысле дублирует константу. Они взаимосвязаны. Будем всегда брать его нулевым. Видим, что если мы получили комбинацию $x_1$, $x_2$ и $1$, большую, чем ноль, мы оказались справа от прямой. Если хочется поменять метки $0$ и $1$ местами, можно умножить все коэффициенты на $-1$. \indef{Наш персептрон понимает по какую сторону от прямой мы оказались,} то есть задаёт одну линейную разделяющую поверхность.  По аналогии для второй прямой мы можем получить следующий результат. 
 
 \begin{minipage}{0.49\linewidth}
 \begin{center}
@@ -497,7 +471,7 @@ $$
 \end{center}
 \end{minipage}
 
-Итак, первый персептрон выбрал нам позицию относительно первой прямой, второй относительно второй. Остаётся только соединить эти результаты в один. Нейрон для скрепки должен реализовать для нас логическую функцию, которую задаёт табличка ниже. Там же нарисованы примеры весов, которые могли бы объединить выхлоп первого слоя в итоговый прогноз.
+Итак, первый персептрон выбрал нам позицию относительно первой прямой, второй относительно второй. Остаётся только объединить эти результаты. Нейрон для скрепки должен реализовать для нас логическую функцию, которую задаёт табличка ниже. Там же нарисованы примеры весов, которые могли бы объединить выхлоп первого слоя в итоговый прогноз.
 
 \begin{minipage}{0.1\linewidth}
 \begin{center}
@@ -595,14 +569,14 @@ $$
 \end{tikzpicture}
 \end{center}
 
-Кстати говоря, если бы мы ввели для нашей нейросетки дополнительный признак $x_1 \cdot x_2$, у нас бы получилось обойтись только одним персептроном. В нашей ситуации \indef{нейросетка сама сварила на первом слое признак $x_1 \cdot x_2$, которого ей не хватало.} 
+Кстати говоря, если бы мы ввели для нашей нейросетки дополнительный признак $x_1 \cdot x_2$, у нас бы получилось обойтись только одним персептроном. В нашей ситуации \indef{нейросетка сама сварила на первом слое признак $x_1 \cdot x_2$, которого ей не хватало.} Другими словами говоря, нейросетка своим первым слоем превратила сложное пространство признаков в более простое, а затем вторым слоем, решила в нём задачу классификации. 
 \end{enumerate}
 \end{sol}
 
 
 %%%-------------------------------------------
 \begin{problem}{(логические функции)}
-Маша вчера поссорилась с Пашей. Он сказал, что у неё нет логики. Чтобы доказать Паше обратное, Маша нашла теорему, которая говорит о том, что с помощью нейросетки можно аппроксимировать почти любую функцию, и теперь собирается заняться апроксимацией логических функций. Для начала она взяла самые простые, заданные следующими таблицами истинности:
+Маша вчера поссорилась с Пашей. Он сказал, что у неё нет логики. Чтобы доказать Паше обратное, Маша нашла теорему, которая говорит о том, что с помощью нейросетки можно аппроксимировать почти любую функцию, и теперь собирается заняться аппроксимацией логических функций. Для начала она взяла самые простые, заданные следующими таблицами истинности:
 
 \begin{center}
 \begin{minipage}{0.3\linewidth} 
@@ -648,11 +622,11 @@ $$
 \end{minipage}
 \end{center}
 
-Первые два столбика идут на вход, третий получается на выходе. Первая операция --- логическое "и", вторая --- "или".   Операция из третьей таблицы называется "исключающим или" (XoR). Если внимательно приглядеться, то можно заметить, что $XoR$ --- это то же самое что и $[x_1 \ne x_2]$\footnote{Тут квадратные скобки обозначают индикатор. Он выдаёт $1$, если внутри него стоит правда и $0$, если ложь.}. 
+Первые два столбика идут на вход, третий получается на выходе. Первая операция --- логическое "и", вторая --- "или".   Операция из третьей таблицы называется "исключающим или", $(XoR)$. Если внимательно приглядеться, то можно заметить, что $XoR$ --- это то же самое что и $[x_1 \ne x_2]$\footnote{Тут квадратные скобки обозначают индикатор. Он выдаёт $1$, если внутри него стоит правда и $0$, если ложь. Такая запись называется скобкой Айверсона. Попробуйте записать через неё единичную ступеньку Хевисайда.}. 
 \end{problem}
 
 \begin{sol} 
-На самом деле в предыдущем упражнении мы уже построили нейрон для пересечения, когда нам нужно было оказаться два раза по правильную сторону прямой. Посмотрим на тот же нейрон под другим углом:
+На самом деле, в предыдущем упражнении, мы уже построили нейрон для пересечения. Он располагался на последнем слое нейросети. Посмотрим на тот же нейрон под другим углом:
 
 \begin{minipage}{0.29\linewidth}
 \begin{center}
@@ -690,7 +664,7 @@ $$
 \end{center}
 \end{minipage}
 
-Если нарисовать все наши четыре точки на плоскости, становится ясно, что мы хотим отделить точку $(1,1)$ от всех остальных. Сделать это можно практически любой линией. Например, в нейроне выше задана линия $x_2 = 1.5 - x_1$. Подойдёт и любая другая, отделяющая крест от точек. Пропустим ради приличия точки через наш нейрон:
+Если нарисовать все наши четыре точки на плоскости, становится ясно, что мы хотим отделить точку $(1,1)$ от всех остальных. Сделать это можно большим числом способов. Например, в нейроне выше задана линия $x_2 = 1.5 - x_1$. Подойдёт и любая другая линия, отделяющая $(1,1)$ от остальных точек. Пропустим ради приличия точки через наш нейрон и убедимся, что он работает корректно:
 
 \begin{equation*}
 \begin{aligned}
@@ -790,9 +764,7 @@ $$
 \end{problem}
 
 \begin{sol}
-Маша обратила внимание на очень важную штуку. Нам не хватает признаков, чтобы реализовать $XoR$ за один нейрон. Поэтому первый слой нейросетки сам их для нас придумывает. Чем глубже нейросетку мы построим, тем более сложные и абстрактные признаки она будет выделять из данных и подавать дальше. 
-
-Если добавить ко входу $x_3 = x_1 \cdot x_2$, мы сделаем за нейросетку часть её работы и сможем обойтись одним нейроном. Например, вот таким: 
+Маша обратила внимание на очень важную штуку. Нам не хватает признаков, чтобы реализовать $XoR$ за один нейрон. Поэтому первый слой нейросетки сам их для нас придумывает. Чем глубже нейросетку мы построим, тем более сложные и абстрактные признаки она будет выделять из данных. Если добавить ко входу $x_3 = x_1 \cdot x_2$, мы сделаем за нейросетку часть её работы и сможем обойтись одним нейроном. Например, вот таким: 
 
 $$
 \hat y = [x_1 + x_2 - 2\cdot x_1 \cdot x_2 - 0.5 > 0]
@@ -829,322 +801,323 @@ $$
 Получаем два решения. Прямую $x_2 = 0.5$ и прямую $x_1 = 0.5$.
 \end{sol} 
 
+% \newpage
+% %%%-------------------------------------------
+% \begin{problem}{(универсальный классификатор)}
+% Маша задумалась о том, можно ли с помощью нейронной сетки решить абсолютно любую задачу классификации на два класса со сколь угодно большой точностью. Как думаете будет ли достаточно одного скрытого слоя и ступенчатой функции активации?
+% \end{problem} 
 
-%%%-------------------------------------------
-\begin{problem}{(универсальный классификатор)}
-Маша задумалась о том, можно ли с помощью нейронной сетки с одним скрытым слоем и ступенчатой функцией активации решить абсолютно любую задачу классификации на два класса со сколь угодно большой точностью. Ей кажется, что да. Как это можно сделать? 
-\end{problem} 
+% \begin{sol}
+% Сейчас мы покажем, что нейросеть может решить любую задачу классификации с любой точностью\footnote{Не нужно воспринимать это, как формальное доказательство, это всего лишь "Показательство".}. Для начала попробуем решить задачку с картинки ниже одним нейроном:
 
-\begin{sol}
-Сейчас мы докажем, что нейросеть может решить любую задачу классификации c любой точностью. Для начала попробуем решить задачку с картинки ниже одним нейроном:
+% \begin{center}
+% \begin{tikzpicture}[scale = 0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
+% \draw [fill=blue] (-1.66,5.46) circle (2.5pt);
+% \draw [fill=blue] (-2.1,4.78) circle (2.5pt);
+% \draw [fill=blue] (-1.64,3.84) circle (2.5pt);
+% \draw [fill=blue] (-0.2,3.38) circle (2.5pt);
+% \draw [fill=blue] (1.42,3.) circle (2.5pt);
+% \draw [fill=blue] (1.98,2.58) circle (2.5pt);
+% \draw [fill=blue] (1.76,1.62) circle (2.5pt);
+% \draw [fill=blue] (1.56,1.32) circle (2.5pt);
+% \draw [fill=blue] (1.,1.02) circle (2.5pt);
+% \draw [fill=blue] (0.24,0.52) circle (2.5pt);
+% \draw [fill=blue] (0.06,-0.28) circle (2.5pt);
+% \draw [fill=blue] (-0.16,1.7) circle (2.5pt);
+% \draw [fill=blue] (0.8,1.68) circle (2.5pt);
+% \draw [fill=blue] (0.78,2.94) circle (2.5pt);
+% \draw [fill=blue] (-0.7,2.58) circle (2.5pt);
+% \draw [fill=blue] (-2.28,2.46) circle (2.5pt);
+% \draw [fill=blue] (-2.32,3.56) circle (2.5pt);
+% \draw [fill=blue] (-2.84,4.34) circle (2.5pt);
+% \draw [fill=blue] (-2.78,5.22) circle (2.5pt);
+% \draw [fill=blue] (-3.18,2.82) circle (2.5pt);
+% \draw [fill=blue] (-1.44,3.12) circle (2.5pt);
+% \draw [fill=blue] (-1.62,1.) circle (2.5pt);
+% \draw [fill=blue] (-2.7,1.54) circle (2.5pt);
+% \draw [fill=blue] (-1.36,1.88) circle (2.5pt);
+% \draw [fill=blue] (-0.58,1.32) circle (2.5pt);
+% \draw [fill=blue] (-0.9,-1.28) circle (2.5pt);
+% \draw [fill=blue] (-0.94,0.68) circle (2.5pt);
+% \draw [fill=blue] (1.48,-1.32) circle (2.5pt);
+% \draw [fill=blue] (0.52,-1.24) circle (2.5pt);
+% \draw [fill=blue] (-1.04,-0.34) circle (2.5pt);
+% \draw [fill=blue] (0.42,-1.86) circle (2.5pt);
+% \draw [fill=blue] (-2.02,0.16) circle (2.5pt);
+% \draw [fill=blue] (-2.16,1.56) circle (2.5pt);
+% \draw [fill=blue] (-3.26,3.46) circle (2.5pt);
+% \draw [fill=blue] (-3.78,4.32) circle (2.5pt);
+% \draw [fill=blue] (-3.52,4.82) circle (2.5pt);
+% \draw [fill=blue] (-2.38,5.82) circle (2.5pt);
+% \draw [fill=blue] (-1.28,5.98) circle (2.5pt);
+% \draw [fill=blue] (1.72,-1.98) circle (2.5pt);
+% \draw [fill=blue] (3.08,-2.06) circle (2.5pt);
+% \draw [fill=blue] (2.1,-1.52) circle (2.5pt);
+% \draw [fill=blue] (2.8,-1.36) circle (2.5pt);
+% \path (0.44,5.76) pic[red] {cross=2.5pt};
+% \path (-0.48,5.56) pic[red] {cross=2.5pt};
+% \path (-0.68,5.) pic[red] {cross=2.5pt};
+% \path (-0.64,4.12) pic[red] {cross=2.5pt};
+% \path (-1.32,4.68) pic[red] {cross=2.5pt};
+% \path (0.2,4.28) pic[red] {cross=2.5pt};
+% \path (0.1,5.06) pic[red] {cross=2.5pt};
+% \path (1.88,5.04) pic[red] {cross=2.5pt};
+% \path (-1.28,5.38) pic[red] {cross=2.5pt};
+% \path (1.,3.92) pic[red] {cross=2.5pt};
+% \path (0.88,5.28) pic[red] {cross=2.5pt};
+% \path (-0.82,3.42) pic[red] {cross=2.5pt};
+% \path (0.22,2.7) pic[red] {cross=2.5pt};
+% \path (1.22,2.42) pic[red] {cross=2.5pt};
+% \path (1.78,3.32) pic[red] {cross=2.5pt};
+% \path (2.76,2.24) pic[red] {cross=2.5pt};
+% \path (2.2,0.44) pic[red] {cross=2.5pt};
+% \path (1.54,0.6) pic[red] {cross=2.5pt};
+% \path (0.94,0.34) pic[red] {cross=2.5pt};
+% \path (0.88,-0.12) pic[red] {cross=2.5pt};
+% \path (1.12,-0.62) pic[red] {cross=2.5pt};
+% \path (2.06,-0.62) pic[red] {cross=2.5pt};
+% \path (1.62,0.06) pic[red] {cross=2.5pt};
+% \path (2.28,1.04) pic[red] {cross=2.5pt};
+% \path (2.24,1.84) pic[red] {cross=2.5pt};
+% \path (3.98,2.26) pic[red] {cross=2.5pt};
+% \path (3.02,3.12) pic[red] {cross=2.5pt};
+% \path (0.12,3.42) pic[red] {cross=2.5pt};
+% \path (0.56,3.5) pic[red] {cross=2.5pt};
+% \path (2.04,4.24) pic[red] {cross=2.5pt};
+% \path (0.98,4.68) pic[red] {cross=2.5pt};
+% \path (2.66,3.78) pic[red] {cross=2.5pt};
+% \path (3.36,1.42) pic[red] {cross=2.5pt};
+% \path (2.94,0.44) pic[red] {cross=2.5pt};
+% \path (2.94,-0.44) pic[red] {cross=2.5pt};
+% \path (3.78,-1.12) pic[red] {cross=2.5pt};
+% \path (3.74,-1.86) pic[red] {cross=2.5pt};
+% \path (3.34,-0.84) pic[red] {cross=2.5pt};
+% \path (4.,0.32) pic[red] {cross=2.5pt};
+% \path (3.92,0.96) pic[red] {cross=2.5pt};
+% \path (3.6,1.88) pic[red] {cross=2.5pt};
+% \path (3.54,2.66) pic[red] {cross=2.5pt};
+% \path (2.38,2.92) pic[red] {cross=2.5pt};
+% \path (4.04,-0.46) pic[red] {cross=2.5pt};
+% \path (4.64,-1.66) pic[red] {cross=2.5pt};
+% \path (4.36,-0.98) pic[red] {cross=2.5pt};
+% \path (1.44,5.66) pic[red] {cross=2.5pt};
+% \path (1.2,1.74) pic[red] {cross=2.5pt};
+% \draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0,-3)-- (0,7);
+% \end{tikzpicture}
+% \end{center} 
 
-\begin{center}
-\begin{tikzpicture}[scale = 0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
-\draw [fill=blue] (-1.66,5.46) circle (2.5pt);
-\draw [fill=blue] (-2.1,4.78) circle (2.5pt);
-\draw [fill=blue] (-1.64,3.84) circle (2.5pt);
-\draw [fill=blue] (-0.2,3.38) circle (2.5pt);
-\draw [fill=blue] (1.42,3.) circle (2.5pt);
-\draw [fill=blue] (1.98,2.58) circle (2.5pt);
-\draw [fill=blue] (1.76,1.62) circle (2.5pt);
-\draw [fill=blue] (1.56,1.32) circle (2.5pt);
-\draw [fill=blue] (1.,1.02) circle (2.5pt);
-\draw [fill=blue] (0.24,0.52) circle (2.5pt);
-\draw [fill=blue] (0.06,-0.28) circle (2.5pt);
-\draw [fill=blue] (-0.16,1.7) circle (2.5pt);
-\draw [fill=blue] (0.8,1.68) circle (2.5pt);
-\draw [fill=blue] (0.78,2.94) circle (2.5pt);
-\draw [fill=blue] (-0.7,2.58) circle (2.5pt);
-\draw [fill=blue] (-2.28,2.46) circle (2.5pt);
-\draw [fill=blue] (-2.32,3.56) circle (2.5pt);
-\draw [fill=blue] (-2.84,4.34) circle (2.5pt);
-\draw [fill=blue] (-2.78,5.22) circle (2.5pt);
-\draw [fill=blue] (-3.18,2.82) circle (2.5pt);
-\draw [fill=blue] (-1.44,3.12) circle (2.5pt);
-\draw [fill=blue] (-1.62,1.) circle (2.5pt);
-\draw [fill=blue] (-2.7,1.54) circle (2.5pt);
-\draw [fill=blue] (-1.36,1.88) circle (2.5pt);
-\draw [fill=blue] (-0.58,1.32) circle (2.5pt);
-\draw [fill=blue] (-0.9,-1.28) circle (2.5pt);
-\draw [fill=blue] (-0.94,0.68) circle (2.5pt);
-\draw [fill=blue] (1.48,-1.32) circle (2.5pt);
-\draw [fill=blue] (0.52,-1.24) circle (2.5pt);
-\draw [fill=blue] (-1.04,-0.34) circle (2.5pt);
-\draw [fill=blue] (0.42,-1.86) circle (2.5pt);
-\draw [fill=blue] (-2.02,0.16) circle (2.5pt);
-\draw [fill=blue] (-2.16,1.56) circle (2.5pt);
-\draw [fill=blue] (-3.26,3.46) circle (2.5pt);
-\draw [fill=blue] (-3.78,4.32) circle (2.5pt);
-\draw [fill=blue] (-3.52,4.82) circle (2.5pt);
-\draw [fill=blue] (-2.38,5.82) circle (2.5pt);
-\draw [fill=blue] (-1.28,5.98) circle (2.5pt);
-\draw [fill=blue] (1.72,-1.98) circle (2.5pt);
-\draw [fill=blue] (3.08,-2.06) circle (2.5pt);
-\draw [fill=blue] (2.1,-1.52) circle (2.5pt);
-\draw [fill=blue] (2.8,-1.36) circle (2.5pt);
-\path (0.44,5.76) pic[red] {cross=2.5pt};
-\path (-0.48,5.56) pic[red] {cross=2.5pt};
-\path (-0.68,5.) pic[red] {cross=2.5pt};
-\path (-0.64,4.12) pic[red] {cross=2.5pt};
-\path (-1.32,4.68) pic[red] {cross=2.5pt};
-\path (0.2,4.28) pic[red] {cross=2.5pt};
-\path (0.1,5.06) pic[red] {cross=2.5pt};
-\path (1.88,5.04) pic[red] {cross=2.5pt};
-\path (-1.28,5.38) pic[red] {cross=2.5pt};
-\path (1.,3.92) pic[red] {cross=2.5pt};
-\path (0.88,5.28) pic[red] {cross=2.5pt};
-\path (-0.82,3.42) pic[red] {cross=2.5pt};
-\path (0.22,2.7) pic[red] {cross=2.5pt};
-\path (1.22,2.42) pic[red] {cross=2.5pt};
-\path (1.78,3.32) pic[red] {cross=2.5pt};
-\path (2.76,2.24) pic[red] {cross=2.5pt};
-\path (2.2,0.44) pic[red] {cross=2.5pt};
-\path (1.54,0.6) pic[red] {cross=2.5pt};
-\path (0.94,0.34) pic[red] {cross=2.5pt};
-\path (0.88,-0.12) pic[red] {cross=2.5pt};
-\path (1.12,-0.62) pic[red] {cross=2.5pt};
-\path (2.06,-0.62) pic[red] {cross=2.5pt};
-\path (1.62,0.06) pic[red] {cross=2.5pt};
-\path (2.28,1.04) pic[red] {cross=2.5pt};
-\path (2.24,1.84) pic[red] {cross=2.5pt};
-\path (3.98,2.26) pic[red] {cross=2.5pt};
-\path (3.02,3.12) pic[red] {cross=2.5pt};
-\path (0.12,3.42) pic[red] {cross=2.5pt};
-\path (0.56,3.5) pic[red] {cross=2.5pt};
-\path (2.04,4.24) pic[red] {cross=2.5pt};
-\path (0.98,4.68) pic[red] {cross=2.5pt};
-\path (2.66,3.78) pic[red] {cross=2.5pt};
-\path (3.36,1.42) pic[red] {cross=2.5pt};
-\path (2.94,0.44) pic[red] {cross=2.5pt};
-\path (2.94,-0.44) pic[red] {cross=2.5pt};
-\path (3.78,-1.12) pic[red] {cross=2.5pt};
-\path (3.74,-1.86) pic[red] {cross=2.5pt};
-\path (3.34,-0.84) pic[red] {cross=2.5pt};
-\path (4.,0.32) pic[red] {cross=2.5pt};
-\path (3.92,0.96) pic[red] {cross=2.5pt};
-\path (3.6,1.88) pic[red] {cross=2.5pt};
-\path (3.54,2.66) pic[red] {cross=2.5pt};
-\path (2.38,2.92) pic[red] {cross=2.5pt};
-\path (4.04,-0.46) pic[red] {cross=2.5pt};
-\path (4.64,-1.66) pic[red] {cross=2.5pt};
-\path (4.36,-0.98) pic[red] {cross=2.5pt};
-\path (1.44,5.66) pic[red] {cross=2.5pt};
-\path (1.2,1.74) pic[red] {cross=2.5pt};
-\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0,-3)-- (0,7);
-\end{tikzpicture}
-\end{center} 
+% Такая разделяющая полоса будет давать нам какое-то число ошибок. Как улучшить результат работы такой нейронки? Ответ прост: Давайте возьмём на первом слое два нейрона. Каждый из них построит по линии. На втором слое возьмём один нейрон, который объединит результат работы первого слоя и скажет нам, где именно мы оказались. Тогда получим такое решение: 
 
-Такая разделяющая полоса будет давать нам какое-то число ошибок. Как улучшить результат работы такой нейронки? Ответ прост: Давайте возьмём на первом слое два нейрона. Каждый из них построит по линии. На втором слое возьмём один нейрон, который объединит результат работы первого слоя и скажет нам, где именно мы оказались. Тогда получим такое решение: 
+% \begin{center}
+% \begin{tikzpicture}[scale = 0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
+% \draw [fill=blue] (-1.66,5.46) circle (2.5pt);
+% \draw [fill=blue] (-2.1,4.78) circle (2.5pt);
+% \draw [fill=blue] (-1.64,3.84) circle (2.5pt);
+% \draw [fill=blue] (-0.2,3.38) circle (2.5pt);
+% \draw [fill=blue] (1.42,3.) circle (2.5pt);
+% \draw [fill=blue] (1.98,2.58) circle (2.5pt);
+% \draw [fill=blue] (1.76,1.62) circle (2.5pt);
+% \draw [fill=blue] (1.56,1.32) circle (2.5pt);
+% \draw [fill=blue] (1.,1.02) circle (2.5pt);
+% \draw [fill=blue] (0.24,0.52) circle (2.5pt);
+% \draw [fill=blue] (0.06,-0.28) circle (2.5pt);
+% \draw [fill=blue] (-0.16,1.7) circle (2.5pt);
+% \draw [fill=blue] (0.8,1.68) circle (2.5pt);
+% \draw [fill=blue] (0.78,2.94) circle (2.5pt);
+% \draw [fill=blue] (-0.7,2.58) circle (2.5pt);
+% \draw [fill=blue] (-2.28,2.46) circle (2.5pt);
+% \draw [fill=blue] (-2.32,3.56) circle (2.5pt);
+% \draw [fill=blue] (-2.84,4.34) circle (2.5pt);
+% \draw [fill=blue] (-2.78,5.22) circle (2.5pt);
+% \draw [fill=blue] (-3.18,2.82) circle (2.5pt);
+% \draw [fill=blue] (-1.44,3.12) circle (2.5pt);
+% \draw [fill=blue] (-1.62,1.) circle (2.5pt);
+% \draw [fill=blue] (-2.7,1.54) circle (2.5pt);
+% \draw [fill=blue] (-1.36,1.88) circle (2.5pt);
+% \draw [fill=blue] (-0.58,1.32) circle (2.5pt);
+% \draw [fill=blue] (-0.9,-1.28) circle (2.5pt);
+% \draw [fill=blue] (-0.94,0.68) circle (2.5pt);
+% \draw [fill=blue] (1.48,-1.32) circle (2.5pt);
+% \draw [fill=blue] (0.52,-1.24) circle (2.5pt);
+% \draw [fill=blue] (-1.04,-0.34) circle (2.5pt);
+% \draw [fill=blue] (0.42,-1.86) circle (2.5pt);
+% \draw [fill=blue] (-2.02,0.16) circle (2.5pt);
+% \draw [fill=blue] (-2.16,1.56) circle (2.5pt);
+% \draw [fill=blue] (-3.26,3.46) circle (2.5pt);
+% \draw [fill=blue] (-3.78,4.32) circle (2.5pt);
+% \draw [fill=blue] (-3.52,4.82) circle (2.5pt);
+% \draw [fill=blue] (-2.38,5.82) circle (2.5pt);
+% \draw [fill=blue] (-1.28,5.98) circle (2.5pt);
+% \draw [fill=blue] (1.72,-1.98) circle (2.5pt);
+% \draw [fill=blue] (3.08,-2.06) circle (2.5pt);
+% \draw [fill=blue] (2.1,-1.52) circle (2.5pt);
+% \draw [fill=blue] (2.8,-1.36) circle (2.5pt);
+% \path (0.44,5.76) pic[red] {cross=2.5pt};
+% \path (-0.48,5.56) pic[red] {cross=2.5pt};
+% \path (-0.68,5.) pic[red] {cross=2.5pt};
+% \path (-0.64,4.12) pic[red] {cross=2.5pt};
+% \path (-1.32,4.68) pic[red] {cross=2.5pt};
+% \path (0.2,4.28) pic[red] {cross=2.5pt};
+% \path (0.1,5.06) pic[red] {cross=2.5pt};
+% \path (1.88,5.04) pic[red] {cross=2.5pt};
+% \path (-1.28,5.38) pic[red] {cross=2.5pt};
+% \path (1.,3.92) pic[red] {cross=2.5pt};
+% \path (0.88,5.28) pic[red] {cross=2.5pt};
+% \path (-0.82,3.42) pic[red] {cross=2.5pt};
+% \path (0.22,2.7) pic[red] {cross=2.5pt};
+% \path (1.22,2.42) pic[red] {cross=2.5pt};
+% \path (1.78,3.32) pic[red] {cross=2.5pt};
+% \path (2.76,2.24) pic[red] {cross=2.5pt};
+% \path (2.2,0.44) pic[red] {cross=2.5pt};
+% \path (1.54,0.6) pic[red] {cross=2.5pt};
+% \path (0.94,0.34) pic[red] {cross=2.5pt};
+% \path (0.88,-0.12) pic[red] {cross=2.5pt};
+% \path (1.12,-0.62) pic[red] {cross=2.5pt};
+% \path (2.06,-0.62) pic[red] {cross=2.5pt};
+% \path (1.62,0.06) pic[red] {cross=2.5pt};
+% \path (2.28,1.04) pic[red] {cross=2.5pt};
+% \path (2.24,1.84) pic[red] {cross=2.5pt};
+% \path (3.98,2.26) pic[red] {cross=2.5pt};
+% \path (3.02,3.12) pic[red] {cross=2.5pt};
+% \path (0.12,3.42) pic[red] {cross=2.5pt};
+% \path (0.56,3.5) pic[red] {cross=2.5pt};
+% \path (2.04,4.24) pic[red] {cross=2.5pt};
+% \path (0.98,4.68) pic[red] {cross=2.5pt};
+% \path (2.66,3.78) pic[red] {cross=2.5pt};
+% \path (3.36,1.42) pic[red] {cross=2.5pt};
+% \path (2.94,0.44) pic[red] {cross=2.5pt};
+% \path (2.94,-0.44) pic[red] {cross=2.5pt};
+% \path (3.78,-1.12) pic[red] {cross=2.5pt};
+% \path (3.74,-1.86) pic[red] {cross=2.5pt};
+% \path (3.34,-0.84) pic[red] {cross=2.5pt};
+% \path (4.,0.32) pic[red] {cross=2.5pt};
+% \path (3.92,0.96) pic[red] {cross=2.5pt};
+% \path (3.6,1.88) pic[red] {cross=2.5pt};
+% \path (3.54,2.66) pic[red] {cross=2.5pt};
+% \path (2.38,2.92) pic[red] {cross=2.5pt};
+% \path (4.04,-0.46) pic[red] {cross=2.5pt};
+% \path (4.64,-1.66) pic[red] {cross=2.5pt};
+% \path (4.36,-0.98) pic[red] {cross=2.5pt};
+% \path (1.44,5.66) pic[red] {cross=2.5pt};
+% \path (1.2,1.74) pic[red] {cross=2.5pt};
+% \draw [line width=2.pt,dash pattern=on 3pt off 3pt] (-4,7)-- (0.5,1.374);
+% \draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0.5,1.375)-- (0.5,-3);
+% \end{tikzpicture}
+% \end{center} 
 
-\begin{center}
-\begin{tikzpicture}[scale = 0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
-\draw [fill=blue] (-1.66,5.46) circle (2.5pt);
-\draw [fill=blue] (-2.1,4.78) circle (2.5pt);
-\draw [fill=blue] (-1.64,3.84) circle (2.5pt);
-\draw [fill=blue] (-0.2,3.38) circle (2.5pt);
-\draw [fill=blue] (1.42,3.) circle (2.5pt);
-\draw [fill=blue] (1.98,2.58) circle (2.5pt);
-\draw [fill=blue] (1.76,1.62) circle (2.5pt);
-\draw [fill=blue] (1.56,1.32) circle (2.5pt);
-\draw [fill=blue] (1.,1.02) circle (2.5pt);
-\draw [fill=blue] (0.24,0.52) circle (2.5pt);
-\draw [fill=blue] (0.06,-0.28) circle (2.5pt);
-\draw [fill=blue] (-0.16,1.7) circle (2.5pt);
-\draw [fill=blue] (0.8,1.68) circle (2.5pt);
-\draw [fill=blue] (0.78,2.94) circle (2.5pt);
-\draw [fill=blue] (-0.7,2.58) circle (2.5pt);
-\draw [fill=blue] (-2.28,2.46) circle (2.5pt);
-\draw [fill=blue] (-2.32,3.56) circle (2.5pt);
-\draw [fill=blue] (-2.84,4.34) circle (2.5pt);
-\draw [fill=blue] (-2.78,5.22) circle (2.5pt);
-\draw [fill=blue] (-3.18,2.82) circle (2.5pt);
-\draw [fill=blue] (-1.44,3.12) circle (2.5pt);
-\draw [fill=blue] (-1.62,1.) circle (2.5pt);
-\draw [fill=blue] (-2.7,1.54) circle (2.5pt);
-\draw [fill=blue] (-1.36,1.88) circle (2.5pt);
-\draw [fill=blue] (-0.58,1.32) circle (2.5pt);
-\draw [fill=blue] (-0.9,-1.28) circle (2.5pt);
-\draw [fill=blue] (-0.94,0.68) circle (2.5pt);
-\draw [fill=blue] (1.48,-1.32) circle (2.5pt);
-\draw [fill=blue] (0.52,-1.24) circle (2.5pt);
-\draw [fill=blue] (-1.04,-0.34) circle (2.5pt);
-\draw [fill=blue] (0.42,-1.86) circle (2.5pt);
-\draw [fill=blue] (-2.02,0.16) circle (2.5pt);
-\draw [fill=blue] (-2.16,1.56) circle (2.5pt);
-\draw [fill=blue] (-3.26,3.46) circle (2.5pt);
-\draw [fill=blue] (-3.78,4.32) circle (2.5pt);
-\draw [fill=blue] (-3.52,4.82) circle (2.5pt);
-\draw [fill=blue] (-2.38,5.82) circle (2.5pt);
-\draw [fill=blue] (-1.28,5.98) circle (2.5pt);
-\draw [fill=blue] (1.72,-1.98) circle (2.5pt);
-\draw [fill=blue] (3.08,-2.06) circle (2.5pt);
-\draw [fill=blue] (2.1,-1.52) circle (2.5pt);
-\draw [fill=blue] (2.8,-1.36) circle (2.5pt);
-\path (0.44,5.76) pic[red] {cross=2.5pt};
-\path (-0.48,5.56) pic[red] {cross=2.5pt};
-\path (-0.68,5.) pic[red] {cross=2.5pt};
-\path (-0.64,4.12) pic[red] {cross=2.5pt};
-\path (-1.32,4.68) pic[red] {cross=2.5pt};
-\path (0.2,4.28) pic[red] {cross=2.5pt};
-\path (0.1,5.06) pic[red] {cross=2.5pt};
-\path (1.88,5.04) pic[red] {cross=2.5pt};
-\path (-1.28,5.38) pic[red] {cross=2.5pt};
-\path (1.,3.92) pic[red] {cross=2.5pt};
-\path (0.88,5.28) pic[red] {cross=2.5pt};
-\path (-0.82,3.42) pic[red] {cross=2.5pt};
-\path (0.22,2.7) pic[red] {cross=2.5pt};
-\path (1.22,2.42) pic[red] {cross=2.5pt};
-\path (1.78,3.32) pic[red] {cross=2.5pt};
-\path (2.76,2.24) pic[red] {cross=2.5pt};
-\path (2.2,0.44) pic[red] {cross=2.5pt};
-\path (1.54,0.6) pic[red] {cross=2.5pt};
-\path (0.94,0.34) pic[red] {cross=2.5pt};
-\path (0.88,-0.12) pic[red] {cross=2.5pt};
-\path (1.12,-0.62) pic[red] {cross=2.5pt};
-\path (2.06,-0.62) pic[red] {cross=2.5pt};
-\path (1.62,0.06) pic[red] {cross=2.5pt};
-\path (2.28,1.04) pic[red] {cross=2.5pt};
-\path (2.24,1.84) pic[red] {cross=2.5pt};
-\path (3.98,2.26) pic[red] {cross=2.5pt};
-\path (3.02,3.12) pic[red] {cross=2.5pt};
-\path (0.12,3.42) pic[red] {cross=2.5pt};
-\path (0.56,3.5) pic[red] {cross=2.5pt};
-\path (2.04,4.24) pic[red] {cross=2.5pt};
-\path (0.98,4.68) pic[red] {cross=2.5pt};
-\path (2.66,3.78) pic[red] {cross=2.5pt};
-\path (3.36,1.42) pic[red] {cross=2.5pt};
-\path (2.94,0.44) pic[red] {cross=2.5pt};
-\path (2.94,-0.44) pic[red] {cross=2.5pt};
-\path (3.78,-1.12) pic[red] {cross=2.5pt};
-\path (3.74,-1.86) pic[red] {cross=2.5pt};
-\path (3.34,-0.84) pic[red] {cross=2.5pt};
-\path (4.,0.32) pic[red] {cross=2.5pt};
-\path (3.92,0.96) pic[red] {cross=2.5pt};
-\path (3.6,1.88) pic[red] {cross=2.5pt};
-\path (3.54,2.66) pic[red] {cross=2.5pt};
-\path (2.38,2.92) pic[red] {cross=2.5pt};
-\path (4.04,-0.46) pic[red] {cross=2.5pt};
-\path (4.64,-1.66) pic[red] {cross=2.5pt};
-\path (4.36,-0.98) pic[red] {cross=2.5pt};
-\path (1.44,5.66) pic[red] {cross=2.5pt};
-\path (1.2,1.74) pic[red] {cross=2.5pt};
-\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (-4,7)-- (0.5,1.374);
-\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0.5,1.375)-- (0.5,-3);
-\end{tikzpicture}
-\end{center} 
+% Разделяющая поверхность стала поинтереснее, и мы стали лучше разбираться с тем, в какой части плоскости мы оказались. Давайте на первом слое прикрутим ещё несколько персептронов, которые будут рисовать нам на плоскости линии: 
 
-Разделяющая поверхность стала поинтереснее, и мы стали лучше разбираться с тем, в какой части плоскости мы оказались. Давайте на первом слое прикрутим ещё несколько персептронов, которые будут рисовать нам на плоскости линии: 
+% \begin{center}
+% \begin{tikzpicture}[scale = 0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
+% \draw [fill=blue] (-1.66,5.46) circle (2.5pt);
+% \draw [fill=blue] (-2.1,4.78) circle (2.5pt);
+% \draw [fill=blue] (-1.64,3.84) circle (2.5pt);
+% \draw [fill=blue] (-0.2,3.38) circle (2.5pt);
+% \draw [fill=blue] (1.42,3.) circle (2.5pt);
+% \draw [fill=blue] (1.98,2.58) circle (2.5pt);
+% \draw [fill=blue] (1.76,1.62) circle (2.5pt);
+% \draw [fill=blue] (1.56,1.32) circle (2.5pt);
+% \draw [fill=blue] (1.,1.02) circle (2.5pt);
+% \draw [fill=blue] (0.24,0.52) circle (2.5pt);
+% \draw [fill=blue] (0.06,-0.28) circle (2.5pt);
+% \draw [fill=blue] (-0.16,1.7) circle (2.5pt);
+% \draw [fill=blue] (0.8,1.68) circle (2.5pt);
+% \draw [fill=blue] (0.78,2.94) circle (2.5pt);
+% \draw [fill=blue] (-0.7,2.58) circle (2.5pt);
+% \draw [fill=blue] (-2.28,2.46) circle (2.5pt);
+% \draw [fill=blue] (-2.32,3.56) circle (2.5pt);
+% \draw [fill=blue] (-2.84,4.34) circle (2.5pt);
+% \draw [fill=blue] (-2.78,5.22) circle (2.5pt);
+% \draw [fill=blue] (-3.18,2.82) circle (2.5pt);
+% \draw [fill=blue] (-1.44,3.12) circle (2.5pt);
+% \draw [fill=blue] (-1.62,1.) circle (2.5pt);
+% \draw [fill=blue] (-2.7,1.54) circle (2.5pt);
+% \draw [fill=blue] (-1.36,1.88) circle (2.5pt);
+% \draw [fill=blue] (-0.58,1.32) circle (2.5pt);
+% \draw [fill=blue] (-0.9,-1.28) circle (2.5pt);
+% \draw [fill=blue] (-0.94,0.68) circle (2.5pt);
+% \draw [fill=blue] (1.48,-1.32) circle (2.5pt);
+% \draw [fill=blue] (0.52,-1.24) circle (2.5pt);
+% \draw [fill=blue] (-1.04,-0.34) circle (2.5pt);
+% \draw [fill=blue] (0.42,-1.86) circle (2.5pt);
+% \draw [fill=blue] (-2.02,0.16) circle (2.5pt);
+% \draw [fill=blue] (-2.16,1.56) circle (2.5pt);
+% \draw [fill=blue] (-3.26,3.46) circle (2.5pt);
+% \draw [fill=blue] (-3.78,4.32) circle (2.5pt);
+% \draw [fill=blue] (-3.52,4.82) circle (2.5pt);
+% \draw [fill=blue] (-2.38,5.82) circle (2.5pt);
+% \draw [fill=blue] (-1.28,5.98) circle (2.5pt);
+% \draw [fill=blue] (1.72,-1.98) circle (2.5pt);
+% \draw [fill=blue] (3.08,-2.06) circle (2.5pt);
+% \draw [fill=blue] (2.1,-1.52) circle (2.5pt);
+% \draw [fill=blue] (2.8,-1.36) circle (2.5pt);
+% \path (0.44,5.76) pic[red] {cross=2.5pt};
+% \path (-0.48,5.56) pic[red] {cross=2.5pt};
+% \path (-0.68,5.) pic[red] {cross=2.5pt};
+% \path (-0.64,4.12) pic[red] {cross=2.5pt};
+% \path (-1.32,4.68) pic[red] {cross=2.5pt};
+% \path (0.2,4.28) pic[red] {cross=2.5pt};
+% \path (0.1,5.06) pic[red] {cross=2.5pt};
+% \path (1.88,5.04) pic[red] {cross=2.5pt};
+% \path (-1.28,5.38) pic[red] {cross=2.5pt};
+% \path (1.,3.92) pic[red] {cross=2.5pt};
+% \path (0.88,5.28) pic[red] {cross=2.5pt};
+% \path (-0.82,3.42) pic[red] {cross=2.5pt};
+% \path (0.22,2.7) pic[red] {cross=2.5pt};
+% \path (1.22,2.42) pic[red] {cross=2.5pt};
+% \path (1.78,3.32) pic[red] {cross=2.5pt};
+% \path (2.76,2.24) pic[red] {cross=2.5pt};
+% \path (2.2,0.44) pic[red] {cross=2.5pt};
+% \path (1.54,0.6) pic[red] {cross=2.5pt};
+% \path (0.94,0.34) pic[red] {cross=2.5pt};
+% \path (0.88,-0.12) pic[red] {cross=2.5pt};
+% \path (1.12,-0.62) pic[red] {cross=2.5pt};
+% \path (2.06,-0.62) pic[red] {cross=2.5pt};
+% \path (1.62,0.06) pic[red] {cross=2.5pt};
+% \path (2.28,1.04) pic[red] {cross=2.5pt};
+% \path (2.24,1.84) pic[red] {cross=2.5pt};
+% \path (3.98,2.26) pic[red] {cross=2.5pt};
+% \path (3.02,3.12) pic[red] {cross=2.5pt};
+% \path (0.12,3.42) pic[red] {cross=2.5pt};
+% \path (0.56,3.5) pic[red] {cross=2.5pt};
+% \path (2.04,4.24) pic[red] {cross=2.5pt};
+% \path (0.98,4.68) pic[red] {cross=2.5pt};
+% \path (2.66,3.78) pic[red] {cross=2.5pt};
+% \path (3.36,1.42) pic[red] {cross=2.5pt};
+% \path (2.94,0.44) pic[red] {cross=2.5pt};
+% \path (2.94,-0.44) pic[red] {cross=2.5pt};
+% \path (3.78,-1.12) pic[red] {cross=2.5pt};
+% \path (3.74,-1.86) pic[red] {cross=2.5pt};
+% \path (3.34,-0.84) pic[red] {cross=2.5pt};
+% \path (4.,0.32) pic[red] {cross=2.5pt};
+% \path (3.92,0.96) pic[red] {cross=2.5pt};
+% \path (3.6,1.88) pic[red] {cross=2.5pt};
+% \path (3.54,2.66) pic[red] {cross=2.5pt};
+% \path (2.38,2.92) pic[red] {cross=2.5pt};
+% \path (4.04,-0.46) pic[red] {cross=2.5pt};
+% \path (4.64,-1.66) pic[red] {cross=2.5pt};
+% \path (4.36,-0.98) pic[red] {cross=2.5pt};
+% \path (1.44,5.66) pic[red] {cross=2.5pt};
+% \path (1.2,1.74) pic[red] {cross=2.5pt};
 
-\begin{center}
-\begin{tikzpicture}[scale = 0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
-\draw [fill=blue] (-1.66,5.46) circle (2.5pt);
-\draw [fill=blue] (-2.1,4.78) circle (2.5pt);
-\draw [fill=blue] (-1.64,3.84) circle (2.5pt);
-\draw [fill=blue] (-0.2,3.38) circle (2.5pt);
-\draw [fill=blue] (1.42,3.) circle (2.5pt);
-\draw [fill=blue] (1.98,2.58) circle (2.5pt);
-\draw [fill=blue] (1.76,1.62) circle (2.5pt);
-\draw [fill=blue] (1.56,1.32) circle (2.5pt);
-\draw [fill=blue] (1.,1.02) circle (2.5pt);
-\draw [fill=blue] (0.24,0.52) circle (2.5pt);
-\draw [fill=blue] (0.06,-0.28) circle (2.5pt);
-\draw [fill=blue] (-0.16,1.7) circle (2.5pt);
-\draw [fill=blue] (0.8,1.68) circle (2.5pt);
-\draw [fill=blue] (0.78,2.94) circle (2.5pt);
-\draw [fill=blue] (-0.7,2.58) circle (2.5pt);
-\draw [fill=blue] (-2.28,2.46) circle (2.5pt);
-\draw [fill=blue] (-2.32,3.56) circle (2.5pt);
-\draw [fill=blue] (-2.84,4.34) circle (2.5pt);
-\draw [fill=blue] (-2.78,5.22) circle (2.5pt);
-\draw [fill=blue] (-3.18,2.82) circle (2.5pt);
-\draw [fill=blue] (-1.44,3.12) circle (2.5pt);
-\draw [fill=blue] (-1.62,1.) circle (2.5pt);
-\draw [fill=blue] (-2.7,1.54) circle (2.5pt);
-\draw [fill=blue] (-1.36,1.88) circle (2.5pt);
-\draw [fill=blue] (-0.58,1.32) circle (2.5pt);
-\draw [fill=blue] (-0.9,-1.28) circle (2.5pt);
-\draw [fill=blue] (-0.94,0.68) circle (2.5pt);
-\draw [fill=blue] (1.48,-1.32) circle (2.5pt);
-\draw [fill=blue] (0.52,-1.24) circle (2.5pt);
-\draw [fill=blue] (-1.04,-0.34) circle (2.5pt);
-\draw [fill=blue] (0.42,-1.86) circle (2.5pt);
-\draw [fill=blue] (-2.02,0.16) circle (2.5pt);
-\draw [fill=blue] (-2.16,1.56) circle (2.5pt);
-\draw [fill=blue] (-3.26,3.46) circle (2.5pt);
-\draw [fill=blue] (-3.78,4.32) circle (2.5pt);
-\draw [fill=blue] (-3.52,4.82) circle (2.5pt);
-\draw [fill=blue] (-2.38,5.82) circle (2.5pt);
-\draw [fill=blue] (-1.28,5.98) circle (2.5pt);
-\draw [fill=blue] (1.72,-1.98) circle (2.5pt);
-\draw [fill=blue] (3.08,-2.06) circle (2.5pt);
-\draw [fill=blue] (2.1,-1.52) circle (2.5pt);
-\draw [fill=blue] (2.8,-1.36) circle (2.5pt);
-\path (0.44,5.76) pic[red] {cross=2.5pt};
-\path (-0.48,5.56) pic[red] {cross=2.5pt};
-\path (-0.68,5.) pic[red] {cross=2.5pt};
-\path (-0.64,4.12) pic[red] {cross=2.5pt};
-\path (-1.32,4.68) pic[red] {cross=2.5pt};
-\path (0.2,4.28) pic[red] {cross=2.5pt};
-\path (0.1,5.06) pic[red] {cross=2.5pt};
-\path (1.88,5.04) pic[red] {cross=2.5pt};
-\path (-1.28,5.38) pic[red] {cross=2.5pt};
-\path (1.,3.92) pic[red] {cross=2.5pt};
-\path (0.88,5.28) pic[red] {cross=2.5pt};
-\path (-0.82,3.42) pic[red] {cross=2.5pt};
-\path (0.22,2.7) pic[red] {cross=2.5pt};
-\path (1.22,2.42) pic[red] {cross=2.5pt};
-\path (1.78,3.32) pic[red] {cross=2.5pt};
-\path (2.76,2.24) pic[red] {cross=2.5pt};
-\path (2.2,0.44) pic[red] {cross=2.5pt};
-\path (1.54,0.6) pic[red] {cross=2.5pt};
-\path (0.94,0.34) pic[red] {cross=2.5pt};
-\path (0.88,-0.12) pic[red] {cross=2.5pt};
-\path (1.12,-0.62) pic[red] {cross=2.5pt};
-\path (2.06,-0.62) pic[red] {cross=2.5pt};
-\path (1.62,0.06) pic[red] {cross=2.5pt};
-\path (2.28,1.04) pic[red] {cross=2.5pt};
-\path (2.24,1.84) pic[red] {cross=2.5pt};
-\path (3.98,2.26) pic[red] {cross=2.5pt};
-\path (3.02,3.12) pic[red] {cross=2.5pt};
-\path (0.12,3.42) pic[red] {cross=2.5pt};
-\path (0.56,3.5) pic[red] {cross=2.5pt};
-\path (2.04,4.24) pic[red] {cross=2.5pt};
-\path (0.98,4.68) pic[red] {cross=2.5pt};
-\path (2.66,3.78) pic[red] {cross=2.5pt};
-\path (3.36,1.42) pic[red] {cross=2.5pt};
-\path (2.94,0.44) pic[red] {cross=2.5pt};
-\path (2.94,-0.44) pic[red] {cross=2.5pt};
-\path (3.78,-1.12) pic[red] {cross=2.5pt};
-\path (3.74,-1.86) pic[red] {cross=2.5pt};
-\path (3.34,-0.84) pic[red] {cross=2.5pt};
-\path (4.,0.32) pic[red] {cross=2.5pt};
-\path (3.92,0.96) pic[red] {cross=2.5pt};
-\path (3.6,1.88) pic[red] {cross=2.5pt};
-\path (3.54,2.66) pic[red] {cross=2.5pt};
-\path (2.38,2.92) pic[red] {cross=2.5pt};
-\path (4.04,-0.46) pic[red] {cross=2.5pt};
-\path (4.64,-1.66) pic[red] {cross=2.5pt};
-\path (4.36,-0.98) pic[red] {cross=2.5pt};
-\path (1.44,5.66) pic[red] {cross=2.5pt};
-\path (1.2,1.74) pic[red] {cross=2.5pt};
+% \draw [line width=2.pt,dash pattern=on 3pt off 3pt] (-2,4.5)-- (0,7);
+% \draw [line width=2.pt,dash pattern=on 3pt off 3pt] (-2,4.5)-- (0.5,1.374);
+% \draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0.5,1.375)-- (0.5,-1);
+% \draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0.5,-1)-- (3,-1);
+% \draw [line width=2.pt,dash pattern=on 3pt off 3pt] (3,-1)-- (3.7,-2.5);
+% \end{tikzpicture}
+% \end{center} 
 
-\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (-2,4.5)-- (0,7);
-\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (-2,4.5)-- (0.5,1.374);
-\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0.5,1.375)-- (0.5,-1);
-\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (0.5,-1)-- (3,-1);
-\draw [line width=2.pt,dash pattern=on 3pt off 3pt] (3,-1)-- (3.7,-2.5);
-\end{tikzpicture}
-\end{center} 
+% На первом слое пять персептронов решают по какую сторону от каждой прямой мы оказались. На втором слое находится один единственный нейрон, который объединяет все решения в итоговый ответ. Всегда, когда мы оказываемся относительно прямой в зоне крестов, персептрон выдаёт на выход единицу. Если второй слой видит пять единиц, он прогнозирует крест, то есть $1$. Если хотя бы одной единицы нет, значит мы оказались в зоне точек, и прогнозировать нужно $0$: 
 
-На первом слое пять персептронов решают по какую сторону от каждой прямой мы оказались. На втором слое находится один единственный нейрон, который объединяет все решения в итоговый ответ. Всегда, когда мы оказываемся относительно прямой в зоне крестов, персептрон выдаёт на выход единицу. Если второй слой видит пять единиц, он прогнозирует крест, то есть $1$. Если хотя бы одной единицы нет, значит мы оказались в зоне точек, и прогнозировать нужно $0$: 
+% $$
+% \hat y = [h_1 + h_2 + h_3 + h_4 + h_5 - 4.5 > 0].
+% $$
 
-$$
-\hat y = [x_1 + x_2 + x_3 + x_4 + x_5 - 4.5 > 0].
-$$
+% Увеличивая число персептронов на первом слое и поднимая константу на втором, мы можем добиться любой точности при решении нашей задачи. Если в качестве функций активации использовать не пороговую, а, например, сигмоиду, то граница будет получаться гладкой. Принцип работы при этом не поменяется. 
+% \end{sol} 
 
-Увеличивая число персептронов на первом слое и поднимая константу на втором, мы можем добиться любой точности при решении нашей задачи. Если в качестве функций активации использовать не пороговую, а, например, сигмоиду, то граница будет получаться гладкой. Принцип работы при этом не поменяется. 
-\end{sol} 
-
+\newpage 
 
 %%%-------------------------------------------
 \begin{problem}{(избыток)}
@@ -1162,12 +1135,11 @@ $$
 \begin{sol}
 Нейросетка Маши оказалась избыточной. Во-первых, можно увидеть, что на первом слое есть нейрон, который вообще ничего не делает. Связи, которые идут к нему от входов настолько тусклые (коэффициенты при них равны нулю), что их даже не видно на картинке. От этого нейрона смело можно избавиться и сделать архитектуру проще.  Во-вторых, можно заметить, что на последнем слое у нас есть два одинаковых нейрона. Один из них смело можно выбрасывать. 
 
+Для решения такой простой задачи классификации подойдёт более простая модель. Сколько минимально нужно нейронов, чтобы её решить вам и Маше предстоит выяснить в следующей задаче. 
+
 \begin{center} 
 \includegraphics[scale=0.17]{tensorflow_demo2.png}
 \end{center} 
-
-
-Для решения такой простой задачи классификации подойдёт более простая модель. Сколько минимально нужно нейронов, чтобы её решить вам и Маше предстоит выяснить в следующей задаче. 
 \end{sol}
 
 
@@ -1363,22 +1335,41 @@ $$
 \end{problem}
 
 \begin{sol}
+\vspace{-1.2cm} 
 \begin{enumerate} 
-\item  Нам c помощью нейросетки надо выделить треугольник. Всё, что внутри будет относится к первому классу.  
+\item  Нам с помощью нейросетки надо выделить треугольник. Всё, что внутри будет относится к первому классу. Получается, что на первом слое надо три нейрона. Каждый из них настроим так, что если мы попадаем внутрь треугольника, он выдаёт $1$. Тогда на втором слое будет достаточно одного нейрона, который удостоверится, что все три результата с первого слоя оказались равны $1$. Вернитесь к предыдущей задаче, сходите на сайт с демкой и постройте оптимальную нейросетку.
 
+\begin{minipage}{0.49\linewidth} 
 \begin{center}
 	\begin{tikzpicture}[scale=0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
-	\draw [line width=2.pt] (0,-5)-- (2,-1);
+	\draw [line width=2.pt] (0,-5)-- (1,-1);
 	\draw [line width=2] (0,-1)-- (4,-5);
-	\draw [line width=2] (0,-4)-- (4,-4);
+	\draw [line width=2] (-2,-4)-- (5,-4);
     \draw (1,-2.9) node[anchor=north west] {\color{green} $1$};
 	\end{tikzpicture}
 \end{center}
+\end{minipage} 
+\hfill
+\begin{minipage}{0.49\linewidth} 
+\begin{center}
+	\begin{tikzpicture}[scale=0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
+	\draw [line width=2.pt] (0,-5)-- (1,-1);
+	\draw [line width=2] (0,-1)-- (4,-5);
+	\draw [line width=2] (-2,-4)-- (5,-4);
+    \draw (1.35,-3.5) node {\small \color{green} $(1, 1, 1)$};
+    \draw (-1.5,-3.5) node {\small \color{red} $(1, 0, 1)$};
+    \draw (5,-3.5) node {\small \color{red} $(1, 1, 0)$};
+    \draw (1.5,-4.6) node {\small \color{red} $(0, 1, 1)$};
+    \draw (-1.5,-4.6) node {\small \color{red} $(0, 0, 1)$};
+    \draw (5,-4.6) node {\small \color{red} $(0, 1, 0)$};
+    \draw (1,0) node {\small \color{red} $(1, 0, 0)$};
+	\end{tikzpicture}
+\end{center}
+\end{minipage} 
 
-Получается на первом слое надо три нейрона. Каждый из них настроим так, что если мы попадаем внутрь треугольника, он выдаёт $1$. Тогда на втором слое будет достаточно одного нейрона, который удостоверится, что все три результата с первого слоя оказались равны $1$. Посмотрите теперь на предыдущую задачу, сходите на сайт с демкой и постройте оптимальную нейросетку. 
+\item Первый слой должен построить нам три линии. Это три нейрона. Второй слой должен принять решение в какой из полос мы оказались. Будем считать, что если мы попали направо, нейрон выдаёт единицу. Если мы попали налево, ноль. В качестве функции активации используем единичную ступеньку. 
 
-\item Понятно, что первый слой должен построить нам три линии. Это три нейрона. 
-
+\begin{minipage}{0.49\linewidth} 
 \begin{center}
 	\begin{tikzpicture}[scale=0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
 	\draw [line width=2.pt] (0,-1.5)-- (0,1);
@@ -1390,57 +1381,188 @@ $$
     \draw (5,0) node[anchor=north west] {\color{green} $1$};
 	\end{tikzpicture}
 \end{center}
+\end{minipage} 
+\hfill
+\begin{minipage}{0.49\linewidth} 
+\begin{center}
+	\begin{tikzpicture}[scale=0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
+	\draw [line width=2.pt] (0,-1.5)-- (0,1);
+	\draw [line width=2.pt] (2,-1.5)-- (2,1);
+	\draw [line width=2.pt] (4,-1.5)-- (4,1);
+    \draw (-2.1,0) node[anchor=north west] {\small \color{red} $(0,0,0)$};
+    \draw (-0.1,0) node[anchor=north west] {\small \color{green} $(1,0,0)$};
+    \draw (1.9,0) node[anchor=north west] {\small \color{red} $(1,1,0)$};
+    \draw (4,0) node[anchor=north west] {\small \color{green} $(1,1,1)$};
+	\end{tikzpicture}
+\end{center}
+\end{minipage} 
 
-Второй слой должен принять решение: в какой из полос мы оказались.
+Вопрос в том, хватит ли нам на втором слое одного нейрона для того, чтобы обработать все четыре возможные ситуации. Нам нужно, чтобы выполнялись следующие условия
 
-\item Перед нами две XoR задачи. На первом слое будем строить четыре линии. 
+\begin{equation*}
+    \begin{cases} 
+    & f(1 \cdot w_1 + 1 \cdot w_2 + 1 \cdot w_3) = 1 \\ 
+    & f(1 \cdot w_1 + 0 \cdot w_2 + 0 \cdot w_3) = 0 \\
+    & f(1 \cdot w_1 + 1 \cdot w_2 + 01 \cdot w_3) = 0 \\
+    & f(0 \cdot w_1 + 0 \cdot w_2 + 0 \cdot w_3) = 0 \\
+    \end{cases}.
+\end{equation*}
 
-\item Первый слой строит пять линий. 
+Для того, чтобы со вторым уравнением всё было хорошо, возьмём $w_1 = 1.$ Тогда вес $w_2$ надо взять отрицательным, а $w_3$ положительным, например, $w_2 = -2$, а $w_3 = 4$. Тогда один нейрон на внешнем слое решит нашу задачу. Выходит, что всего надо задействовать 4 нейрона. 
 
+\item Оценим число нейронов сверху. Перед нами две $XoR$ задачи, которые лежат рядом с друг-другом. Для решения каждой надо $3$ нейрона. Чтобы объединить получившиеся решения нужен ещё один нейрон. Получается трёхслойная сетка с $7$ нейронами.
+
+Если мы попробуем подойти к задаче также, как в предыдущем пункте, на втором слое мы получим несовместимую систему из уравнений. То есть третьего слоя точно не избежать. 
+
+Можно первым слоем построить $3$ линии, вторым решить задачу из предыдущего пункта, а на третьем добавить информацию о том, выше горизонтальной линии мы оказались или ниже. Тогда мы потратим $6$ нейронов. Нейросетка получится неполносвязной. 
+
+\begin{center}
+\begin{tikzpicture}[line cap=round,line join=round,x=1.0cm,y=1.0cm]
+
+\draw [line width=1.pt] (-3,1.5) circle (0.5cm) node {$1$};
+\draw [line width=1.pt] (-3,-0.5) circle (0.5cm) node {$x_1$};
+\draw [line width=1.pt] (-3,-2.5) circle (0.5cm) node {$x_2$};	
+
+\draw [line width=1.pt] (-1,2)--(1,2)--(1,3)--(-1,3)--cycle;
+\draw [line width=1.pt] (-0.7,2.2)--(0,2.2)--(0,2.8)--(0.7,2.8);
+
+\draw [line width=1.pt] (-1,0)--(1,0)--(1,1)--(-1,1)--cycle;
+\draw [line width=1.pt] (-0.7,0.2)--(0,0.2)--(0,0.8)--(0.7,0.8);
+
+\draw [line width=1.pt] (-1,-2)--(1,-2)--(1,-1)--(-1,-1)--cycle;
+\draw [line width=1.pt] (-0.7,-1.8)--(0,-1.8)--(0,-1.2)--(0.7,-1.2);
+
+\draw [line width=1.pt] (-1,-3)--(1,-3)--(1,-4)--(-1,-4)--cycle;
+\draw [line width=1.pt] (-0.7,-3.8)--(0,-3.8)--(0,-3.2)--(0.7,-3.2);
+
+\draw [line width=1.pt] (-2.5,1.5) -- (-1,0.5);
+\draw [line width=1.pt] (-2.5,1.5) -- (-1,2.5);
+\draw [line width=1.pt] (-2.5,1.5) -- (-1,-1.5);
+\draw [line width=1.pt] (-2.5,1.5) -- (-1,-3.5);
+
+\draw [line width=1.pt] (-2.5,-0.5) -- (-1,0.5);
+\draw [line width=1.pt] (-2.5,-0.5) -- (-1,2.5);
+\draw [line width=1.pt] (-2.5,-0.5) -- (-1,-1.5);
+\draw [line width=1.pt] (-2.5,-0.5) -- (-1,-3.5);
+
+\draw [line width=1.pt] (-2.5,-2.5) -- (-1,0.5);
+\draw [line width=1.pt] (-2.5,-2.5) -- (-1,2.5);
+\draw [line width=1.pt] (-2.5,-2.5) -- (-1,-1.5);
+\draw [line width=1.pt] (-2.5,-2.5) -- (-1,-3.5);
+
+\draw [line width=1.pt] (2,0)--(4,0)--(4,1)--(2,1)--cycle;
+\draw [line width=1.pt] (2.3,0.2)--(3,0.2)--(3,0.8)--(3.7,0.8);
+
+\draw [line width=1.pt] (1,0.5) -- (2, 0.5);
+\draw [line width=1.pt] (1,2.5) -- (2, 0.5);
+\draw [line width=1.pt] (1,-1.5) -- (2, 0.5);
+
+\draw [line width=1.pt] (5,0)--(7,0)--(7,-1)--(5,-1)--cycle;
+\draw [line width=1.pt] (5.3,-0.8)--(6,-0.8)--(6,-0.2)--(6.7,-0.2);
+
+\draw [line width=1.pt] (4,0.5) -- (5, -0.5);
+\draw [line width=1.pt] (1,-3.5) -- (5, -0.5);
+
+\draw [->] (7,-0.5) -- (8,-0.5) node[right] {$\hat y$};
+\end{tikzpicture}
+\end{center}
+
+\item Думайте, рассуждайте, а автор умывает руки.
 \end{enumerate} 
 \end{sol} 
 
 %%%-------------------------------------------
 \begin{problem}{(универсальный регрессор)}
-
-Маша доказала Паше, что у неё всё в полном порядке с логикой. Теперь она собирается доказать ему, что с помощью однослойной нейронной сетки можно приблизить любую непрерывную функцию от одного аргумента $f(x)$ со сколь угодно большой точностью\footnote{\url{http://neuralnetworksanddeeplearning.com/chap4.html}}.  
+Маша доказала Паше, что у неё всё в полном порядке с логикой. Теперь она собирается доказать ему, что с помощью двухслойной нейронной сетки можно приблизить любую непрерывную функцию от одного аргумента $f(x)$ со сколь угодно большой точностью\footnote{\url{http://neuralnetworksanddeeplearning.com/chap4.html}}.  
 
 \textbf{Hint:}  Вспомните, что любую непрерывную функцию можно приблизить с помощью кусочно-линейной функции (ступеньки). Осознайте как с помощью пары нейронов можно описать такую ступеньку. Соедините все ступеньки в сумму с помощью выходного нейрона. 
 \end{problem}
 
 \begin{sol}
-Мы хотим приблизить функцию $f(x)$ с какой-то точностью. Будем делать это с помощью кусочно-линейных ступенек. Чем выше точность, тем больше будем рисовать ступенек: 
+% https://medium.com/analytics-vidhya/you-dont-understand-neural-networks-until-you-understand-the-universal-approximation-theorem-85b3e7677126
 
-\todo[inline]{Картинка с двумя приближениями для функции} 
+Не нужно воспринимать эту задачку как строгое доказательство. Скорее, это показательство. Мы хотим приблизить функцию $f(x)$ с какой-то точностью. Будем делать это с помощью кусочно-линейных ступенек. Чем выше точность, тем больше будем рисовать ступенек.
 
-Попробуем смоделировать одну ступеньку. 
+\begin{center}
+\includegraphics[scale=0.2]{images/steps.png}
+\end{center}
 
-\todo[inline]{Картинка ступеньки} 
-
-Если $x$, для которого мы ищем $f(x)$ попадает в неё, мы будем приближать $f(x)$ этой ступенькой. Ступенька состоит из двух линий. Выходит, что она будет описываться двумя нейронами. Если мы внутри ступеньки, значит $a \le x \ge a + h$. Пара нейронов должна сравнить $x$ с $a$ и $a + h$ и на основе этого принять решение. 
-
-\todo[inline]{Картинка двух нейронов} 
-
-Можно записать попадание $x$ в ступеньку в виде нейрона также как мы делали это в задачке с таблицами истинности: 
+Высоту ступеньки определяют по-разному. Чаще всего как значение функции в середине выбранного отрезка $b_i = f(\frac{a_i + a_{i+1}}{2})$. Тогда всю функцию целиком можно приблизить суммой
 
 $$
-1 - [x \le a] - [x \ge a + h]
+f(x) \approx \sum_{i=1}^n f \left( \frac{a_i + a_{i+1}}{2} \right) \cdot [a_i \ge x < a_{i+1}].
 $$
 
-Если оба условия --- неправда, получаем $1$. Мы в ступеньке. Если хотя бы одно из них выполнено --- мы вылетаем за ступеньку. Оба сразу выполниться они не могут. 
+Давайте попробуем описать с помощью нейрона одну из ступенек. Пуст высота этой ступеньки равна $b_i$. Шагать по оси $x$ мы будем с фиксированным шагом $h$, поэтому $a_{i+1} = a_i + h$.
 
-Будем так действовать для каждой ступеньки. Мы попадём только в одну из них. Значит внутренний слой выплюнет на нас $1$ только из одной ветки. Остаётся только решить  
+\begin{center}
+\begin{tikzpicture}
+\draw [line width=1.pt] (0,0)--(1,0)--(1,3)--(0,3)--cycle;
+\draw [->] (-0.3,0)--(-0.3,3);
+\draw [->] (-0.3,3)--(-0.3,0);
+\draw (-0.3, 1.5) node[left] {$b_i$};
+\draw (0.2, -0.3) node[left] {$a_i$};
+\draw (1, -0.3) node[right] {$a_i + h$};
+\end{tikzpicture}
+\end{center}
 
-ко ко ко 
+Если $x$, для которого мы ищем $f(x)$ попадает в полуинтервал, на котором задана наша ступенька, мы будем приближать $f(x)$ этой ступенькой. Ступенька состоит из двух линий. Выходит, что она будет описываться двумя нейронами. Если мы внутри ступеньки, значит $a_i \le x < a_i + h$. Пара нейронов должна сравнить $x$ с $a_i$ и $a_i + h$ и на основе этого принять решение. Можно записать попадание $x$ в ступеньку следующим образом:
+
+$$
+1 - [x < a_i] - [x \ge a_i + h]
+$$
+
+Если оба условия --- неправда, получаем $1$. Мы в ступеньке. Если хотя бы одно из них выполнено --- мы вылетаем за ступеньку. Оба сразу выполниться они не могут. Нарисуем это в виде нейрона. В качестве функции активации используем единичную ступеньку. 
+
+\begin{center}
+\begin{tikzpicture}
+\draw [line width=1.pt] (-3, 1.5) circle (0.5cm) node {$x$};
+\draw [line width=1.pt] (-3, -0.5) circle (0.5cm) node {$1$};
+	
+\draw [line width=1.pt] (-1,1)--(2,1)--(2,2)--(-1,2)--cycle;
+\draw (-0.3, 1.5) node[right] {$[x < a_i]$};
+
+\draw [line width=1.pt] (-1,-1)--(2,-1)--(2,0)--(-1,0)--cycle;
+\draw (-0.8, -0.5) node[right] {$[x \ge a_i + h]$};
+
+\draw [line width=1.pt] (-2.5,1.5) -- (-1,1.5);
+\draw (-1.7, 2) node {$1$};
+\draw [line width=1.pt] (-2.5,1.5) -- (-1,-0.5);
+\draw (-2.1, 0.8) node[left] {$1$};
+\draw [line width=1.pt] (-2.5,-0.5) -- (-1,1.5);
+\draw (-1, -1) node[left] {$a_i + h$};
+\draw [line width=1.pt] (-2.5,-0.5) -- (-1,-0.5);
+\draw (-2.1, 0.2) node[left] {$a_i$};
+
+\draw [line width=1.pt] (3,0)--(5,0)--(5,1)--(3,1)--cycle;
+\draw [line width=1.pt] (3.3,0.2)--(4,0.2)--(4,0.8)--(4.7,0.8);
+\draw [line width=1.pt] (2,1.5) -- (3,0.5);
+\draw (3, 1.5) node[left] {$-1$};
+\draw [line width=1.pt] (2,-0.5) -- (3,0.5);
+\draw (3, -0.5) node[left] {$-1$};
+
+\draw [line width=1.pt] (4, 2.5) circle (0.5cm) node {$1$};
+\draw [line width=1.pt] (4,2) -- (4,1);
+\draw (4, 1.5) node[right] {$1$};
+
+\draw [->] (5,0.5) -- (6,0.5);
+\draw (5.2, 0.8)  node[right] {$b_i$};
+\end{tikzpicture}
+\end{center}
+
+Нарисуем такую сетку для каждой ступеньки. Если мы попали в ступеньку, сетка будет выплёвывать со второго слоя единичку. Там мы будем умножать её на $b_i$ и посылать на внешний слой. Мы всегда будем попадать только в одну из ступенек, значит только один из слоёв выдаст нам $1$. Все остальные выдадут $0$. На внешнем слое нам остаётся только просуммировать всё, что к нам пришло и выдать ответ. Чем больше ступенек мы добавляем в модель, тем точнее наша апроксимация. 
 \end{sol} 
 
 %%%-------------------------------------------
 \begin{problem}{(число параметров)}
-	Та, кому принадлежит машин лёрнинг собирается обучить нейронную сеть для решения задачи регрессии, На вход в ней идёт $12$ переменных, в сетке есть $3$ скрытых слоя. В пером слое $300$ нейронов, во втором $200$, в третьем $100$. 
-	
-	\begin{itemize}
-		\item[a)] Сколько параметров предстоит оценить Маше?  Сколько наблюдений вы бы на её месте использовали? 
-		\item[b)] Что Маша должна сделать с внешним слоем, если она собирается решать задачу классификации на два класса и получать на выходе вероятность принадлежности к первому классу? 
-		\item[c)]  Что делать Маше, если она хочет решать задачу классификации на $K$ классов? 
-	\end{itemize}
+Та, кому принадлежит машин лёрнинг собирается обучить полносвязную нейронную сеть для решения задачи регрессии, На вход в ней идёт $12$ переменных, в сетке есть $3$ скрытых слоя. В пером слое $300$ нейронов, во втором $200$, в третьем $100$.  Сколько параметров предстоит оценить Маше?
 \end{problem}
+
+\begin{sol} 
+Нам нужно решить довольно простую комбинаторную задачку. Связи в нашей сетке проведены между всему нейронами. Не забываем учесть, что у каждого нейрона есть константа. Получается, что всего параметров будет
+
+\[
+(12 + 1) \cdot 300 + (300 + 1) \cdot 200 + (200 + 1) \cdot 100 + (100 + 1) \cdot 1.
+\]
+
+\end{sol} 
