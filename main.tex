@@ -40,19 +40,23 @@
 
 \newpage 
 
-\input{part_01_just_function.tex}
+% \input{part_01_just_function.tex}
 
-\newpage 
+% \newpage 
 
 % \input{task_list_02_logloss_nn_out.tex}
 
 % \newpage 
 
-% \input{part_02_gradient.tex}
+%  \input{part_02_gradient.tex}
+
+% \newpage 
+
+% \input{task_list_matrix_diff.tex}
 
 \newpage 
 
-% \input{part_03_backprop.tex}
+\input{part_03_backprop.tex}
 
 \newpage 
 
@@ -124,66 +128,6 @@
 % \end{enumerate}
 
 
-
-% Мидтёрм 
-
-%%%% Дублирует предыдущий пункт :( 
-% \item В коробке на кухне завалялось три персептрона, у каждого два входа с константой и пороговая функция активации:
-
-% \begin{equation*} 
-% f(h) = \begin{cases} 1, h \ge 0 \\ 0, h < 0.\end{cases}
-% \end{equation*} 
-
-% Маша хочет реализовать с их помощью функцию
-
-% $$
-% y = \begin{cases}
-% 1, \text{ если } x_2 \geq |x_1 - 3| + 2; \\
-% 0, \text{ иначе}
-% \end{cases}.
-% $$
-
-
-
-% Маша написала на бумажке функцию: 
-% Сделать в сетке не все связи и попросить нарисовать 
-
-% \begin{equation*}
-% y = \max(0, 4 \cdot \max(0, 3 \cdot x_1 + 4 \cdot x_2 + 1) + 2 \cdot \max(0, 3 \cdot x_1 + 2 \cdot x_2 + 7) + 6)
-% \end{equation*} 
-
-
-
-% Сколько нейронов надо чтобы ... 
-
-% XOR крест 
-
-% \begin{center}
-% \begin{tikzpicture}[scale = 0.7, line cap=round,line join=round,x=1.0cm,y=1.0cm]
-% 	\draw [fill=blue] (-0.44,5.84) circle (2.5pt);
-% 	\draw [fill=blue] (-1.52,5.9) circle (2.5pt);
-% 	\draw [fill=blue] (-3.,6.) circle (2.5pt);
-% 	\draw [fill=blue] (-4.02,5.7) circle (2.5pt);
-% 	\draw [fill=blue] (-3.36,4.28) circle (2.5pt);
-% 	\draw [fill=blue] (-2.4,2.92) circle (2.5pt);
-% 	\draw [fill=blue] (-1.18,3.38) circle (2.5pt);
-% 	\draw [fill=blue] (-0.56,4.16) circle (2.5pt);
-% 	\draw [fill=blue] (0.,5.) circle (2.5pt);
-% 	\draw [fill=blue] (-3.52,3.32) circle (2.5pt);
-% 	\draw [fill=blue] (-0.44,2.5) circle (2.5pt);
-% 	\draw [fill=blue] (-1.44,2.78) circle (2.5pt);
-% 	\draw [fill=blue] (0.06,6.38) circle (2.5pt);
-% 	\draw [fill=blue] (-2.96,6.78) circle (2.5pt);
-% 	\draw [fill=blue] (-4.02,4.56) circle (2.5pt);
-% 	\path (-2.06,4.62) pic[red] {cross=2.5pt};
-% 	\path (-2.,5.) pic[red] {cross=2.5pt};	
-% 	\path (-1.72,4.4) pic[red] {cross=2.5pt};
-% 	\path (-2.46,4.42) pic[red] {cross=2.5pt};
-%     \path (-2.6,4.9) pic[red] {cross=2.5pt};
-%     \path (-2.,4.) pic[red] {cross=2.5pt};
-%     \path (-1.42,4.9) pic[red] {cross=2.5pt};
-% \end{tikzpicture}
-% \end{center} 
 
 
 \end{document}
