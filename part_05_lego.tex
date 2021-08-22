@@ -45,6 +45,9 @@
 \todo[inline]{Задача про паралич сигмоиды и ReLU}
 
 
+\todo[inline]{Parametric Rectifier (PReLU) Выписать уравнения для бэкпропа по параметру $\alpha$} 
+
+
 
 %%%-------------------------------------------
 \begin{problem}{(температура генерации)}
@@ -109,6 +112,8 @@
 	\end{enumerate}
 \end{problem}
 
+\todo[inline]{Добавить вопросиков про дропконнект}
+
 \todo[inline]{Бэкпроп через дропаут}
 
 
@@ -157,7 +162,76 @@
 \todo[inline]{задача про инициализацию от Воронцова}
 
 
+\subsection{Стрельба по ногам}
+
+\begin{problem}{(Проблемы с архитектурой)}
+Миша принёс Маше несколько разных архитектур. Они выглядят довольно странно. Помогите Маше разобраться, что именно Миша сделал неправильно. 
+
+\begin{enumerate} 
+
+\item Решается задача регрессии, предсказываются цены на недвижимость. 
+
+% model = Sequential()
+% model.add(InputLayer([39]))
+% model.add(BatchNormalization())
+% model.add(Dense(128, kernel_initializer=keras.initializers.zeros()))
+% model.add(Dense(128, kernel_initializer=keras.initializers.zeros()))
+% model.add(Dense(1))
+
+% model.compile(optimizer='sgd', loss='mean_squared_error')
+
+\item Решается задача классификация картинок на $10$ классов. Исходный размер картинок $28 \times 28$.
+
+% model = keras.models.Sequential()
+% model.add(L.InputLayer([28, 28, 1]))
+% model.add(L.Conv2D(filters=512, kernel_size=(3, 3)))
+% model.add(L.Activation('relu'))
+% model.add(L.MaxPool2D(pool_size=(2, 2)))
+% model.add(L.Flatten())
+% model.add(L.Dense(100))
+% model.add(L.Activation('softmax'))
+% model.add(L.Dropout(0.1))
+% model.add(L.Dense(10))
+% model.add(L.Activation('softmax'))
+% model.add(L.Dropout(0.1))
+
+% model.compile(optimizer='rmsprop', loss='mean_squared_error')
+
+\item Решается задача классификация картинок на $10$ классов. Исходный размер картинок $100 \times 100$.
+
+% model = keras.models.Sequential()
+% model.add(L.InputLayer([100, 100, 3]))
+
+% for filters in [32, 64, 128, 256]:
+%     model.add(L.Conv2D(filters, kernel_size=(5, 5)))
+%     model.add(L.Conv2D(filters, kernel_size=(1, 1)))
+%     model.add(L.MaxPooling2D(pool_size=(3, 3)))
+%     model.add(L.Activation('relu'))
+%     model.add(L.BatchNormalization())
+
+% model.add(L.Flatten())
+
+% model.add(L.Dense(100, activation='relu'))
+% model.add(L.Dropout(0.5))
+% model.add(L.Dense(10, activation='softmax'))
+
+% model.compile(optimizer='adam', loss='sparse_categorical_accuracy')
+
+
+\end{enumerate} 
+
+
+\end{problem}
+
+
+
+
+
 % \begin{enumerate} 
 % \item Вопрос про батчнормализацию первым слоем вместо нормализации в предобработке, задачи про последовательности слоёв и поиск ошибок 
 % \end{enumerate}
+
+
+
+
 

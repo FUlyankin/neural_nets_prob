@@ -10,6 +10,8 @@
 
 \begin{problem}{(Свёртка своими руками)}
 Дать картинку и попросить сделать свертку с падингом/без/страйдами и тп
+
+Тут же 1D свёртку! 
 \end{problem}
 
 
@@ -76,12 +78,37 @@
 $(W_k \cdot H_k \cdot C_{in} + 1) \cdot C_{out}$
 \end{sol} 
 
-\begin{problem}{(Поле восприятия)}
+\begin{problem}{(Поле обзора)}
     Маша хочет найти котика размера $512 \times 512$ пикселей. Для этого она использует свёртки размера $5 \times 5$ без дополнения нулями (padding).  с пропусками (strides). После каждого свёрточного слоя Маша делает пулинг. 
-    
-    Через сколько слоёв поле восприятия Машиной нейросетки впервые охватит котейку. 
+    Через сколько слоёв поле восприятия Машиной нейросетки впервые охватит котейку?
     % Нарезать на задачи: https://distill.pub/2019/computing-receptive-fields/
 \end{problem}
 
 
+\begin{problem}{(Рекур для поля обзора\footnote{По мотивам: \url{https://distill.pub/2019/computing-receptive-fields/})}
+    Пусть у нас есть вектор размера $n$. На нём отрабатывают одномерные свёртки размера $k$ с шагом $s$. Как поле обзора для $i$-го слоя зависит от поля обзора для $i-1$ слоя? Выпишите формулу в явном виде. 
+    
 
+    Пусть у нас есть два свёрточных слоя размера $k \times k$. 
+    
+    На подумать: как скип-конкешн и батч-нормализация влияют на поле обзора? 
+    
+    Insight: Skip-connections may provide more paths, however, based on [7], they tend to make the effective receptive field smaller.
+    
+    During training, batch normalization parameters are computed based on all the channel elements of the feature map. Thus, one can state that its receptive field is the whole input image.
+    
+    
+\end{problem}
+\begin{sol}
+$r_{i - 1} = s_i \cdot r_i + (k_i - s_i)$
+
+
+\end{sol} 
+
+
+
+
+Скользящее среднее это свёртка 
+
+def moving_average(x, w):
+    return np.convolve(x, np.ones(w), 'valid') / w
