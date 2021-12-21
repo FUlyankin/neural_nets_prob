@@ -4,5 +4,5 @@
 
 __Следущие обновления:__  Первая глава в течение января + описать backprop в течение января
 
-* [Текущая версия книги без ответов](https://github.com/FUlyankin/neural_nets_prob/blob/master/main.pdf)
-* [Текущая версия книги с решениями](https://github.com/FUlyankin/neural_nets_prob/blob/master/main_ans.pdf)
+* [Текущая версия книги без ответов](https://github.com/FUlyankin/neural_nets_prob/blob/master/main_2020-12-21.pdf)
+* [Текущая версия книги с решениями](https://github.com/FUlyankin/neural_nets_prob/blob/master/main_ans_2020-12-21.pdf)
