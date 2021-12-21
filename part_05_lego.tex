@@ -1,9 +1,13 @@
 % !TEX root = main.tex
 
 %%%-------------------------------------------
-\section{Всего лишь кубики LEGO} 
+\section*{Листочек 5: всего лишь кубики LEGO} 
 
-\subsection{Функции активации}
+\addcontentsline{toc}{section}{Листочек 5: всего лишь кубики LEGO}
+
+\epigraph{Цитата про лего}{\textit{автор цитаты}}
+
+\subsection*{Функции активации}
 
 \epigraph{Желание - Ржавый - Семнадцать - Рассвет - Печь - Девять - Добросердечный - Возвращение на Родину - Один - Грузовой вагон.}{\textit{Код активации Зимнего Солдата}}
 
@@ -41,11 +45,19 @@
 \end{problem} 
 
 
-\todo[inline]{Задача про ReLU и сигмоиду (Николенко) }
+\todo[inline]{Задача про ReLU и сигмоиду (Николенко)}
 \todo[inline]{Задача про паралич сигмоиды и ReLU}
 
-
 \todo[inline]{Parametric Rectifier (PReLU) Выписать уравнения для бэкпропа по параметру $\alpha$} 
+
+
+%%%-------------------------------------------
+\begin{problem}{(softplus)}
+\todo[inline]{Про то почему её не используют}
+\end{problem}
+
+%%%-------------------------------------------
+\todo[inline]{Что-то про Mish и Swish}
 
 
 
@@ -70,10 +82,11 @@
 \end{problem}
 
 
-%%%-------------------------------------------
-\subsection{Регуляризация}
 
-\epigraph{Цитата про переобучение}{Автор цитаты}
+%%%-------------------------------------------
+\subsection*{Регуляризация}
+
+\epigraph{Цитата про регуляризацию}{Автор цитаты}
 
 
 \begin{problem}{(Маша и покемоны)}
@@ -118,21 +131,19 @@
 
 
 %%%-------------------------------------------
-\subsection{Нормализация по батчам}
+\subsection*{Нормализация по батчам}
 
 \epigraph{Чашка хорошего чая восстановит мою нормальность.}{\textit{Артур из «Автостопом по галактике»}}
 
-\todo[inline]{Бэкпроп через батчнорм, смысл батчнорма}
-
+\todo[inline]{Бэкпроп через батчнорм, смысл батчнорма, нарисовать граф через него, про то что это уродливая процедура}
 
 \todo[inline]{родить задачу из статьи dropout vs batchnorm}
 
 
 %%%-------------------------------------------
-\subsection{Инициализация}
+\subsection*{Инициализация}
 
 \epigraph{цитата об этом}{\textit{автор}}
-
 
 \begin{problem}{(инициализация весов)}
     \begin{enumerate}
@@ -159,79 +170,95 @@
 \end{problem}
 
 
-\todo[inline]{задача про инициализацию от Воронцова}
+\begin{problem}{(сложная задача про инициализацию)}
+Так чтобы плотность частного надо было искать и все офигели (Воронцов)
+\end{problem}
 
 
-\subsection{Стрельба по ногам}
+\subsection*{Стрельба по ногам}
+
+\epigraph{цитата об этом}{\textit{автор}}
+
 
 \begin{problem}{(Проблемы с архитектурой)}
 Миша принёс Маше несколько разных архитектур. Они выглядят довольно странно. Помогите Маше разобраться, что именно Миша сделал неправильно. 
 
-\begin{enumerate} 
+% \begin{enumerate} 
 
-\item Решается задача регрессии, предсказываются цены на недвижимость. 
+% \item Решается задача регрессии, предсказываются цены на недвижимость. На вход в сеть подаётся $39$ регрессоров. 
 
-% model = Sequential()
-% model.add(InputLayer([39]))
-% model.add(BatchNormalization())
-% model.add(Dense(128, kernel_initializer=keras.initializers.zeros()))
-% model.add(Dense(128, kernel_initializer=keras.initializers.zeros()))
-% model.add(Dense(1))
+% \begin{alltt}
+% model = Sequential() \\
+% model.add(InputLayer([39]) \\
+% model.add(BatchNormalization()) \\
+% model.add(Dense(128, kernel\_initializer=keras.initializers.zeros())) \\
+% model.add(Dense(1)) \\
+% model.compile(optimizer='sgd', loss='mean\_squared\_error')
+% \end{alltt}
 
-% model.compile(optimizer='sgd', loss='mean_squared_error')
+% \item Решается задача классификация картинок размера $28 \times 28$ на $10$ классов.
 
-\item Решается задача классификация картинок на $10$ классов. Исходный размер картинок $28 \times 28$.
+% \begin{alltt}
+% model = Sequential() \\
+% model.add(InputLayer([28, 28, 1])) \\
+% model.add(Conv2D(filters=512, kernel\_size=(3, 3))) \\
+% model.add(Activation('relu')) \\
+% model.add(MaxPool2D(pool_size=(2, 2))) \\
+% model.add(Flatten()) \\
+% model.add(Dense(100)) \\
+% model.add(Activation('softmax')) \\
+% model.add(Dropout(0.1)) \\
+% model.add(Dense(10)) \\
+% model.add(Activation('softmax')) \\
+% model.add(Dropout(0.1)) \\
+% model.compile(optimizer='rmsprop', loss='mean\_squared\_error')
+% \end{alltt}
 
-% model = keras.models.Sequential()
-% model.add(L.InputLayer([28, 28, 1]))
-% model.add(L.Conv2D(filters=512, kernel_size=(3, 3)))
-% model.add(L.Activation('relu'))
-% model.add(L.MaxPool2D(pool_size=(2, 2)))
-% model.add(L.Flatten())
-% model.add(L.Dense(100))
-% model.add(L.Activation('softmax'))
-% model.add(L.Dropout(0.1))
-% model.add(L.Dense(10))
-% model.add(L.Activation('softmax'))
-% model.add(L.Dropout(0.1))
 
-% model.compile(optimizer='rmsprop', loss='mean_squared_error')
-
-\item Решается задача классификация картинок на $10$ классов. Исходный размер картинок $100 \times 100$.
-
-% model = keras.models.Sequential()
-% model.add(L.InputLayer([100, 100, 3]))
+% \item Решается задача классификация картинок размера  $100 \times 100$ на $10$ классов. 
+% \begin{alltt}
+% model = Sequential() \\
+% model.add(InputLayer([100, 100, 3])) \\
 
 % for filters in [32, 64, 128, 256]:
-%     model.add(L.Conv2D(filters, kernel_size=(5, 5)))
-%     model.add(L.Conv2D(filters, kernel_size=(1, 1)))
-%     model.add(L.MaxPooling2D(pool_size=(3, 3)))
-%     model.add(L.Activation('relu'))
-%     model.add(L.BatchNormalization())
+%     model.add(Conv2D(filters, kernel\_size=(5, 5)))
+%     model.add(Conv2D(filters, kernel\_size=(1, 1)))
+%     model.add(MaxPooling2D(pool\_size=(3, 3)))
+%     model.add(Activation('relu'))
+%     model.add(BatchNormalization())
+    
+% model.add(Flatten())
+% model.add(Dense(100, activation='relu'))
+% model.add(Dropout(0.5))
+% model.add(Dense(10, activation='softmax'))
 
-% model.add(L.Flatten())
+% model.compile(optimizer='adam', loss='sparse\_categorical\_accuracy')
+% \end{alltt}
 
-% model.add(L.Dense(100, activation='relu'))
-% model.add(L.Dropout(0.5))
-% model.add(L.Dense(10, activation='softmax'))
-
-% model.compile(optimizer='adam', loss='sparse_categorical_accuracy')
-
-
-\end{enumerate} 
-
-
+% \end{enumerate} 
 \end{problem}
 
 
-
-
-
-% \begin{enumerate} 
-% \item Вопрос про батчнормализацию первым слоем вместо нормализации в предобработке, задачи про последовательности слоёв и поиск ошибок 
-% \end{enumerate}
-
-
-
+% %%%-------------------------------------------
+\begin{problem}{(Ещё один backpropagation)}
+    У Маши есть трёхслойная нейросеть: 
+    
+	$$ 
+	y = f(f(X \cdot W_3 ) \cdot W_2) \cdot W_1 
+	$$
+	
+	\begin{enumerate} 
+	    \item Маща использует в качестве функции активации $f(t) = ReLU(t) =  \max(0; t)$, а в качестве функции потерь $L(W_1, W_2) = \frac{1}{2} \cdot (y - \hat y)^2$.
+	    
+	    \item 
+	   
+	    \item 
+	    
+	    \item 
+	
+	\end{enumerate}
+	
+	Для всех пунктов запишите уравнения для прямого и обратного проходов по сетке. Выпишите для всех весов уравнения, по которым будет делаться шаг градиентного спуска. 
+\end{problem} 
 
 
